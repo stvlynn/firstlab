@@ -1,0 +1,103 @@
+---
+categories:
+  - id: writing
+    name:
+      zh: "写作"
+      ja: "ライティング"
+      en: "Writing"
+    description:
+      zh: "学习如何利用MCP增强你的写作能力"
+      ja: "MCPを使用してライティングスキルを向上させる方法を学ぶ"
+      en: "Learn how to leverage MCP to enhance your writing capabilities"
+    icon: "/images/icons/writing.svg"
+    color: "#8B5CF6" # Purple color
+    items:
+      - id: writing-assistant
+        title:
+          zh: "写作助手"
+          ja: "ライティングアシスタント"
+          en: "Writing Assistant"
+        description:
+          zh: "如何使用MCP作为高效的写作助手"
+          ja: "効率的なライティングアシスタントとしてMCPを使用する方法"
+          en: "How to use MCP as an efficient writing assistant"
+        link: "/mcp/writing/assistant"
+      
+      - id: content-creation
+        title:
+          zh: "内容创作"
+          ja: "コンテンツ作成"
+          en: "Content Creation"
+        description:
+          zh: "使用MCP创建各种类型的内容"
+          ja: "MCPを使用してさまざまなタイプのコンテンツを作成する"
+          en: "Create various types of content using MCP"
+        link: "/mcp/writing/content-creation"
+  
+  - id: file-system
+    name:
+      zh: "文件系统"
+      ja: "ファイルシステム"
+      en: "File System"
+    description:
+      zh: "了解如何使用MCP高效管理文件"
+      ja: "MCPを使用してファイルを効率的に管理する方法を理解する"
+      en: "Understand how to efficiently manage files using MCP"
+    icon: "/images/icons/file-system.svg"
+    color: "#EC4899" # Pink color
+    items:
+      - id: file-operations
+        title:
+          zh: "文件操作"
+          ja: "ファイル操作"
+          en: "File Operations"
+        description:
+          zh: "MCP文件操作基础和高级技巧"
+          ja: "MCPファイル操作の基本と高度なテクニック"
+          en: "Basic and advanced techniques for MCP file operations"
+        link: "/mcp/file-system/operations"
+      
+      - id: file-organization
+        title:
+          zh: "文件组织"
+          ja: "ファイル整理"
+          en: "File Organization"
+        description:
+          zh: "使用MCP有效组织和管理文件结构"
+          ja: "MCPを使用してファイル構造を効果的に整理および管理する"
+          en: "Effectively organize and manage file structures using MCP"
+        link: "/mcp/file-system/organization"
+  
+  - id: device-using
+    name:
+      zh: "设备使用"
+      ja: "デバイス使用"
+      en: "Device Using"
+    description:
+      zh: "探索MCP在各种设备上的应用"
+      ja: "さまざまなデバイスでのMCPの応用を探る"
+      en: "Explore the application of MCP on various devices"
+    icon: "/images/icons/device.svg"
+    color: "#F59E0B" # Amber color
+    items:
+      - id: mobile-integration
+        title:
+          zh: "移动端集成"
+          ja: "モバイル統合"
+          en: "Mobile Integration"
+        description:
+          zh: "将MCP集成到移动设备工作流中"
+          ja: "MCPをモバイルデバイスのワークフローに統合する"
+          en: "Integrate MCP into mobile device workflows"
+        link: "/mcp/device-using/mobile-integration"
+      
+      - id: desktop-usage
+        title:
+          zh: "桌面端使用"
+          ja: "デスクトップ使用法"
+          en: "Desktop Usage"
+        description:
+          zh: "在桌面环境中充分利用MCP"
+          ja: "デスクトップ環境でMCPを最大限に活用する"
+          en: "Making the most of MCP in desktop environments"
+        link: "/mcp/device-using/desktop-usage" 

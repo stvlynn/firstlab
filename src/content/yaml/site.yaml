@@ -1,0 +1,63 @@
+---
+site:
+  title:
+    zh: "First Lab - AI资源分享和学习社区"
+    ja: "First Lab - AIリソース共有と学習コミュニティ"
+    en: "First Lab - AI Resource Sharing and Learning Community"
+  description:
+    zh: "探索AI技术的世界，分享资源，共同学习，一起成长"
+    ja: "AI技術の世界を探索し、リソースを共有し、共に学び、共に成長する"
+    en: "Explore the world of AI technology, share resources, learn together, and grow together"
+  discord: "https://discord.gg/PwZDHH4mv3"
+  logo: "/images/logo.svg"
+  email: "contact@firstlab.ai"
+  social:
+    twitter: "https://twitter.com/firstlabai"
+    github: "https://github.com/firstlab"
+    linkedin: "https://linkedin.com/company/firstlab"
+
+navigation:
+  main:
+    - id: home
+      name:
+        zh: "首页"
+        ja: "ホーム"
+        en: "Home"
+      path: "/"
+    - id: dify
+      name:
+        zh: "Dify"
+        ja: "Dify"
+        en: "Dify"
+      path: "/dify"
+    - id: mcp
+      name:
+        zh: "MCP"
+        ja: "MCP"
+        en: "MCP"
+      path: "/mcp"
+    - id: events
+      name:
+        zh: "活动"
+        ja: "イベント"
+        en: "Events"
+      path: "/events"
+    - id: about
+      name:
+        zh: "关于我们"
+        ja: "私たちについて"
+        en: "About Us"
+      path: "/about"
+
+i18n:
+  locales:
+    - code: "zh"
+      name: "中文"
+      flag: "🇨🇳"
+    - code: "ja"
+      name: "日本語"
+      flag: "🇯🇵"
+    - code: "en"
+      name: "English"
+      flag: "🇺🇸"
+  defaultLocale: "zh" 
