@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '@/components/ui/hover-card';
-import { loadSiteConfig } from '@/lib/yaml';
+} from "@/components/ui/hover-card";
 
 // 创建一个上下文来管理全局语言状态
 export const DEFAULT_LOCALE = 'zh';

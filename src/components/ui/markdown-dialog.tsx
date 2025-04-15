@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import ReactMarkdown from 'react-markdown';
 import { DEFAULT_LOCALE } from '@/app/components/LanguageSwitcher';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import { HttpClient } from '@/lib/utils';
+import Image from 'next/image';
 
 // Debug mode toggle - default to false in production
 const DEBUG_MODE_ENABLED = false;
@@ -33,12 +34,11 @@ interface MarkdownMetadata {
 
 // Create a standalone content component to ensure the latest language is used each time the dialog opens
 const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; locale: string }) => {
-  const [content, setContent] = useState<string>('');
-  const [rawContent, setRawContent] = useState<string>('');
+  const [content, setContent] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<MarkdownMetadata | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const mountedRef = useRef(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [rawContent, setRawContent] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0); // Add refresh key
   
   // Cache request results to avoid repeated loading
@@ -208,18 +208,6 @@ const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; local
     return { extractedContent, parsedMetadata };
   };
 
-  // Add a general function for performance measurement
-  const measurePerformance = useCallback(<T extends any[]>(
-    fn: (...args: T) => void, 
-    name: string, 
-    ...args: T
-  ) => {
-    const start = performance.now();
-    fn(...args);
-    const end = performance.now();
-    console.log(`${name} execution time: ${(end - start).toFixed(2)}ms`);
-  }, []);
-
   // Debug controls - only show when DEBUG_MODE_ENABLED is true
   const [showDebug, setShowDebug] = useState(false);
   const [showPerformance, setShowPerformance] = useState(false);
@@ -325,11 +313,14 @@ const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; local
       )}
       
       {metadata?.metadata?.image && (
-        <div className="w-full h-48 md:h-64 overflow-hidden mb-6 rounded-lg">
-          <img 
+        <div className="w-full h-48 md:h-64 overflow-hidden mb-6 rounded-lg relative">
+          <Image 
             src={metadata.metadata.image} 
-            alt="Event image" 
-            className="w-full h-full object-cover"
+            alt="Event image"
+            fill 
+            priority
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
       )}
@@ -452,7 +443,7 @@ const MarkdownDialog: React.FC<MarkdownDialogProps> = ({
     return () => {
       window.removeEventListener('localeChanged', handleLocaleChange as EventListener);
     };
-  }, []); // No dependency on currentLocale to avoid adding listeners on every language change
+  }, [currentLocale]);
 
   // Force update content when opening dialog
   const handleOpenChange = (open: boolean) => {

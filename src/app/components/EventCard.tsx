@@ -6,10 +6,10 @@ import { getLocaleText } from '@/lib/yaml';
 import { motion } from 'framer-motion';
 import MarkdownDialog from '@/components/ui/markdown-dialog';
 import { DEFAULT_LOCALE } from './LanguageSwitcher';
+import Image from 'next/image';
 import { 
   Card, 
   CardContent, 
-  CardFooter, 
   CardHeader
 } from '@/components/ui/card';
 
@@ -94,11 +94,14 @@ export function EventCard({ event, index }: EventCardProps) {
           className="cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
         >
           {event.image && (
-            <div className="h-48 overflow-hidden">
-              <img 
+            <div className="h-48 overflow-hidden relative">
+              <Image 
                 src={event.image} 
                 alt={getLocaleText(event.title, currentLocale)} 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                priority={index < 3}
               />
             </div>
           )}

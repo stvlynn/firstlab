@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
 // 定义中间件处理函数
-export function middleware(request: NextRequest) {
-  // 获取当前请求的路径
-  const { pathname } = request.nextUrl;
-  
+export function middleware() {
   // 默认不修改请求
   return NextResponse.next();
 }

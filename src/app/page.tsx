@@ -6,6 +6,21 @@ import { getLocaleText } from '@/lib/yaml';
 import { motion } from 'framer-motion';
 import { DEFAULT_LOCALE } from './components/LanguageSwitcher';
 import { EventCard } from './components/EventCard';
+import { Event } from '@/lib/types';
+
+// 定义站点配置类型
+interface SiteConfig {
+  site: {
+    title: {
+      [locale: string]: string;
+    };
+    description: {
+      [locale: string]: string;
+    };
+    discord: string;
+  };
+  // 可以添加更多站点配置属性
+}
 
 // 动画变体
 const containerVariants = {
@@ -32,8 +47,8 @@ const itemVariants = {
 
 export default function HomePage() {
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
-  const [siteConfig, setSiteConfig] = useState<any>(null);
-  const [events, setEvents] = useState<any[]>([]);
+  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   // 从本地存储获取语言设置

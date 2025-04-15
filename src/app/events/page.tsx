@@ -6,6 +6,14 @@ import { EventCard } from '../components/EventCard';
 import { DEFAULT_LOCALE } from '../components/LanguageSwitcher';
 import { motion } from 'framer-motion';
 import { getLocaleText } from '@/lib/yaml';
+import Link from 'next/link';
+
+// 定义UI文本类型
+interface UiTexts {
+  [key: string]: {
+    [locale: string]: string;
+  };
+}
 
 // 动画变体
 const containerVariants = {
@@ -19,21 +27,10 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
-
 export default function EventsPage() {
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
   const [events, setEvents] = useState<Event[]>([]);
-  const [uiTexts, setUiTexts] = useState<any>(null);
+  const [uiTexts, setUiTexts] = useState<UiTexts | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
   // 从本地存储获取语言设置
@@ -154,9 +151,9 @@ export default function EventsPage() {
       
       {events.length > 0 && (
         <div className="mt-12 text-center">
-          <a href="/" className="inline-block py-2 px-4 border border-art-pencil text-art-ink rounded-md transition-colors hover:bg-white">
+          <Link href="/" className="inline-block py-2 px-4 border border-art-pencil text-art-ink rounded-md transition-colors hover:bg-white">
             {getUiText('back_to_home')}
-          </a>
+          </Link>
         </div>
       )}
     </div>
