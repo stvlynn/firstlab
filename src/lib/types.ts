@@ -40,6 +40,9 @@ export type EventMetadata = {
   date: string;
   organizer: string;
   image: string;
+  "summary-zh"?: string;
+  "summary-en"?: string;
+  "summary-ja"?: string;
 };
 
 export type MarkdownEvent = {

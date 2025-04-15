@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { 
   Sheet, 
@@ -83,6 +84,15 @@ export function MobileNav() {
               className="flex items-center gap-2 text-art-ink transition-transform hover:scale-105"
               onClick={() => setOpen(false)}
             >
+              <div className="relative flex-shrink-0 w-8 h-8">
+                <Image 
+                  src="/firstlab.png" 
+                  alt="First Lab Logo" 
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
               <span className="text-2xl font-bold">First Lab</span>
             </Link>
           </div>

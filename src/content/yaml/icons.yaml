@@ -12,6 +12,8 @@ navigation_icons:
   close: "Cancel"
   settings: "Settings"
   search: "Search"
+  nav-arrow-left: "NavArrowLeft"
+  nav-arrow-right: "NavArrowRight"
 
 # 图标样式配置
 icon_styles:

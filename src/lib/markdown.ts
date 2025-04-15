@@ -92,7 +92,10 @@ export function parseEventMarkdown(filePath: string): MarkdownEvent | null {
       if (langContent) {
         languageContents[lang] = langContent;
         titles[lang] = extractFirstHeading(langContent);
-        descriptions[lang] = extractFirstParagraph(langContent);
+        
+        // 使用metadata中的summary字段，如果存在
+        const summaryKey = `summary-${lang}` as keyof EventMetadata;
+        descriptions[lang] = metadata[summaryKey] as string || extractFirstParagraph(langContent);
       }
     });
     
