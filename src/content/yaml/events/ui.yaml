@@ -1,0 +1,55 @@
+---
+title:
+  zh: "社区活动"
+  ja: "コミュニティイベント"
+  en: "Community Events"
+
+subtitle:
+  zh: "探索我们社区举办的各种技术活动和研讨会，共同学习和成长"
+  ja: "コミュニティが主催する様々な技術イベントやワークショップを探索し、共に学び成長しましょう"
+  en: "Explore various technical events and workshops hosted by our community to learn and grow together"
+
+loading:
+  zh: "正在加载活动信息..."
+  ja: "イベント情報を読み込んでいます..."
+  en: "Loading event information..."
+
+no_events:
+  zh: "当前没有活动信息"
+  ja: "現在イベント情報はありません"
+  en: "No event information available"
+
+upcoming_events:
+  zh: "即将到来的活动"
+  ja: "今後のイベント"
+  en: "Upcoming Events"
+
+past_events:
+  zh: "历史活动"
+  ja: "過去のイベント"
+  en: "Past Events"
+
+filter:
+  zh: "筛选活动"
+  ja: "イベントをフィルター"
+  en: "Filter Events"
+
+organizer:
+  zh: "主办方"
+  ja: "主催者"
+  en: "Organizer"
+
+date:
+  zh: "日期"
+  ja: "日付"
+  en: "Date"
+
+learn_more:
+  zh: "了解更多"
+  ja: "詳細を見る"
+  en: "Learn More"
+
+back_to_home:
+  zh: "返回首页"
+  ja: "ホームに戻る"
+  en: "Back to Home" 

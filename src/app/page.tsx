@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getLocaleText } from '@/lib/yaml';
 import { motion } from 'framer-motion';
 import { DEFAULT_LOCALE } from './components/LanguageSwitcher';
+import { EventCard } from './components/EventCard';
 
 // 动画变体
 const containerVariants = {
@@ -29,64 +30,6 @@ const itemVariants = {
   },
 };
 
-// 事件卡片组件
-function EventCard({ event, index }: { event: any; index: number }) {
-  const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
-
-  useEffect(() => {
-    const savedLocale = localStorage.getItem('preferredLanguage');
-    if (savedLocale) {
-      setCurrentLocale(savedLocale);
-    }
-
-    const handleLocaleChange = (event: CustomEvent) => {
-      setCurrentLocale(event.detail.locale);
-    };
-
-    window.addEventListener('localeChanged', handleLocaleChange as EventListener);
-    return () => {
-      window.removeEventListener('localeChanged', handleLocaleChange as EventListener);
-    };
-  }, []);
-
-  return (
-    <motion.div
-      variants={itemVariants}
-      className="art-card overflow-hidden group"
-    >
-      {event.image && (
-        <div className="h-48 overflow-hidden">
-          <img 
-            src={event.image} 
-            alt={getLocaleText(event.title, currentLocale)} 
-            className="w-full h-full object-cover transition-transform group-hover:scale-105"
-          />
-        </div>
-      )}
-      
-      <div className="p-6">
-        <p className="text-art-pencil text-sm mb-2">{event.date}</p>
-        <h3 className="font-semibold text-art-ink mb-3">
-          {getLocaleText(event.title, currentLocale)}
-        </h3>
-        <p className="text-art-charcoal text-sm mb-4">
-          {getLocaleText(event.description, currentLocale)}
-        </p>
-        
-        <a
-          href={event.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ink-link text-art-watercolor-blue font-medium"
-        >
-          {currentLocale === 'zh' ? '了解更多' : 
-           currentLocale === 'ja' ? '詳細を見る' : 'Learn More'}
-        </a>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function HomePage() {
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
   const [siteConfig, setSiteConfig] = useState<any>(null);
@@ -99,11 +42,11 @@ export default function HomePage() {
     if (savedLocale) {
       setCurrentLocale(savedLocale);
     }
-    
+
     const handleLocaleChange = (event: CustomEvent) => {
       setCurrentLocale(event.detail.locale);
     };
-    
+
     window.addEventListener('localeChanged', handleLocaleChange as EventListener);
     return () => {
       window.removeEventListener('localeChanged', handleLocaleChange as EventListener);
@@ -198,8 +141,8 @@ export default function HomePage() {
         </motion.h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event, index) => (
-            <EventCard key={event.id} event={event} index={index} />
+          {events.slice(0, 3).map((event, index) => (
+            <EventCard key={`event-${index}`} event={event} index={index} />
           ))}
         </div>
         

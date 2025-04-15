@@ -36,13 +36,31 @@ export type SiteConfig = {
   };
 };
 
+export type EventMetadata = {
+  date: string;
+  organizer: string;
+  image: string;
+};
+
+export type MarkdownEvent = {
+  slug: string;          // URL slug (filename without extension)
+  metadata: EventMetadata;
+  content: {
+    zh?: string;
+    ja?: string;
+    en?: string;
+  };
+  title: LocaleText;     // Extracted from the first heading of each language section
+  description: LocaleText; // Extracted from the first paragraph after the title
+};
+
 export type Event = {
-  id: string;
   date: string;
   image: string;
   title: LocaleText;
   description: LocaleText;
   link: string;
+  organizer?: string;    // New field for organizer information
 };
 
 export type Events = {

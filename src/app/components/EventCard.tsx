@@ -1,11 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Event } from '@/lib/types';
 import { getLocaleText } from '@/lib/yaml';
 import { motion } from 'framer-motion';
+import MarkdownDialog from '@/components/ui/markdown-dialog';
 import { DEFAULT_LOCALE } from './LanguageSwitcher';
+import { 
+  Card, 
+  CardContent, 
+  CardFooter, 
+  CardHeader
+} from '@/components/ui/card';
 
 type EventCardProps = {
   event: Event;
@@ -14,6 +20,7 @@ type EventCardProps = {
 
 export function EventCard({ event, index }: EventCardProps) {
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
+  const [dialogKeyIndex, setDialogKeyIndex] = useState(0);
   
   // 从localStorage获取语言设置
   useEffect(() => {
@@ -25,6 +32,8 @@ export function EventCard({ event, index }: EventCardProps) {
     // 添加语言更改事件监听器
     const handleLocaleChange = (event: CustomEvent) => {
       setCurrentLocale(event.detail.locale);
+      // 增加key索引，强制重新渲染对话框
+      setDialogKeyIndex(prevIndex => prevIndex + 1);
     };
     
     window.addEventListener('localeChanged', handleLocaleChange as EventListener);
@@ -35,7 +44,7 @@ export function EventCard({ event, index }: EventCardProps) {
   }, []);
   
   // 格式化日期
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { 
       year: 'numeric', 
@@ -48,7 +57,23 @@ export function EventCard({ event, index }: EventCardProps) {
       currentLocale === 'ja' ? 'ja-JP' : 'en-US',
       options
     );
-  };
+  }, [currentLocale]);
+  
+  // 获取Markdown路径
+  const getMarkdownPath = useCallback(() => {
+    // 从event.link中提取路径部分，移除语言前缀
+    const path = event.link.replace(/^\/[a-z]{2}\//, '/');
+    // 使用新的 API 路由获取 markdown 文件
+    const markdownPath = `/api/markdown?path=content/markdown${path}.md`;
+    console.log(`Generated markdown API path: ${markdownPath} from link: ${event.link}`);
+    return markdownPath;
+  }, [event.link]);
+  
+  // 获取当前语言的"主办方"文本
+  const getOrganizerLabel = useCallback(() => {
+    return currentLocale === 'zh' ? '主办方: ' : 
+           currentLocale === 'ja' ? '主催者: ' : 'Organizer: ';
+  }, [currentLocale]);
   
   return (
     <motion.div
@@ -60,10 +85,16 @@ export function EventCard({ event, index }: EventCardProps) {
       }}
       className="group"
     >
-      <div className="art-card art-frame overflow-hidden group-hover:shadow-lg">
-        <div className="relative">
+      <MarkdownDialog 
+        key={`dialog-${event.link}-${dialogKeyIndex}`}
+        title={getLocaleText(event.title, currentLocale)}
+        markdownPath={getMarkdownPath()}
+      >
+        <Card 
+          className="cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+        >
           {event.image && (
-            <div className="h-48 overflow-hidden mb-4">
+            <div className="h-48 overflow-hidden">
               <img 
                 src={event.image} 
                 alt={getLocaleText(event.title, currentLocale)} 
@@ -72,29 +103,28 @@ export function EventCard({ event, index }: EventCardProps) {
             </div>
           )}
           
-          <div className="p-2">
-            <div className="text-sm text-art-pencil mb-2">
-              {formatDate(event.date)}
+          <CardHeader className="pb-0">
+            <div className="flex flex-wrap justify-between items-center text-sm text-muted-foreground">
+              <span>{formatDate(event.date)}</span>
+              {event.organizer && (
+                <span className="text-primary">
+                  {getOrganizerLabel()}{event.organizer}
+                </span>
+              )}
             </div>
-            
-            <h3 className="text-xl font-semibold mb-2 text-art-ink">
+          </CardHeader>
+          
+          <CardContent>
+            <h3 className="text-xl font-semibold mb-2">
               {getLocaleText(event.title, currentLocale)}
             </h3>
             
-            <p className="text-art-charcoal mb-4">
+            <p className="text-muted-foreground">
               {getLocaleText(event.description, currentLocale)}
             </p>
-            
-            <Link
-              href={event.link}
-              className="ink-link text-art-watercolor-blue font-medium"
-            >
-              {currentLocale === 'zh' ? '了解更多' : 
-               currentLocale === 'ja' ? '詳細を見る' : 'Learn More'}
-            </Link>
-          </div>
-        </div>
-      </div>
+          </CardContent>
+        </Card>
+      </MarkdownDialog>
     </motion.div>
   );
 } 
