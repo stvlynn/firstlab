@@ -14,11 +14,32 @@ import { motion } from 'framer-motion';
 import { getLocaleText } from '@/lib/yaml';
 import { DEFAULT_LOCALE } from './LanguageSwitcher';
 
+// 导航项接口
+interface NavigationItem {
+  id: string;
+  name: {
+    zh: string;
+    en: string;
+    ja: string;
+  };
+  path: string;
+}
+
+// 站点配置的接口
+interface SiteConfig {
+  navigation: {
+    main: NavigationItem[];
+  };
+  site: {
+    discord?: string;
+  };
+}
+
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
-  const [siteConfig, setSiteConfig] = useState<any>(null);
+  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
 
   // 加载配置和语言
   useEffect(() => {
@@ -99,7 +120,7 @@ export function MobileNav() {
           
           <nav className="space-y-6 flex-1">
             <ul className="space-y-2">
-              {siteConfig?.navigation?.main?.map((item: any, i: number) => (
+              {siteConfig?.navigation?.main?.map((item: NavigationItem, i: number) => (
                 <motion.li
                   key={item.id}
                   initial={{ opacity: 0, x: -10 }}

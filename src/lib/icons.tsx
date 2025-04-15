@@ -131,28 +131,27 @@ export const getIconStyle = (
 };
 
 // 图标组件
-export const Icon: React.FC<IconProps> = ({
-  name,
-  styleType = 'default',
-  className = '',
-  color,
-  size,
-  strokeWidth,
-}) => {
+export const Icon: React.FC<{
+  name: string;
+  className?: string;
+  size?: string | number;
+  styleType?: 'default' | 'navbar' | 'footer' | 'social' | 'button' | 'language';
+}> = ({ name, className = '', size, styleType = 'default' }) => {
   // 获取样式配置
   const styleConfig = getIconStyle(styleType);
   
   // 优先使用传入的props，否则使用配置
   const finalProps = {
-    color: color || styleConfig.color,
+    color: styleConfig.color,
     width: size || styleConfig.width,
     height: size || styleConfig.height,
-    strokeWidth: strokeWidth || styleConfig.strokeWidth,
+    strokeWidth: styleConfig.strokeWidth,
     className,
   };
   
   // 从Iconoir获取图标组件
-  const IconComponent = (IconoirIcons as any)[name];
+  // 使用断言而不是any
+  const IconComponent = (IconoirIcons as Record<string, React.ElementType>)[name];
   
   if (!IconComponent) {
     console.warn(`Icon '${name}' not found`);

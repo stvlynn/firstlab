@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "First Lab",
-  description: "First Lab - 学习资源和工具",
+  description: "First Lab - Learning Resources and Tools",
   icons: {
     icon: '/firstlab.png',
     apple: '/firstlab.png',
@@ -10,22 +10,22 @@ export const metadata: Metadata = {
   authors: [
     {
       name: 'First Lab',
-      url: 'https://firstlab.ai',
+      url: 'https://1st.ac.cn',
     },
   ],
-  keywords: ['AI', 'Dify', 'MCP', '社区', '学习资源'],
+  keywords: ['AI', 'Dify', 'MCP', '社区', '学习资源', 'コミュニティ', '学習リソース'],
   viewport: {
     width: 'device-width',
     initialScale: 1,
   },
   openGraph: {
     title: 'First Lab',
-    description: 'First Lab - 学习资源和工具',
+    description: 'First Lab - Learning Resources and Tools',
     images: [
       {
         url: '/firstlab.png',
-        width: 1200,
-        height: 630,
+        width: 821,
+        height: 821,
         alt: 'First Lab',
       }
     ],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'First Lab',
-    description: 'First Lab - 学习资源和工具',
+    description: 'First Lab - Learning Resources and Tools',
     images: ['/firstlab.png'],
     creator: '@firstlab',
   },

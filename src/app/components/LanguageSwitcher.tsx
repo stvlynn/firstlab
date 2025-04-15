@@ -45,23 +45,36 @@ export function LanguageSwitcher() {
     }
     
     fetchLocales();
+    
+    // 监听语言变化
+    const handleLocaleChange = (event: CustomEvent) => {
+      setCurrentLocale(event.detail.locale);
+    };
+    
+    window.addEventListener('localeChanged', handleLocaleChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('localeChanged', handleLocaleChange as EventListener);
+    };
   }, []);
   
-  // 切换语言
+  // 获取语言名称
+  const languageName = locales.find(locale => locale.code === currentLocale)?.name || '中文';
+  
   const changeLanguage = (locale: string) => {
-    setCurrentLocale(locale);
+    // 更新保存的语言
     localStorage.setItem('preferredLanguage', locale);
     
-    // 触发一个自定义事件，通知其他组件语言已更改
-    window.dispatchEvent(new CustomEvent('localeChanged', { 
-      detail: { locale } 
-    }));
+    // 更新当前语言
+    setCurrentLocale(locale);
+    
+    // 分发语言变化事件
+    window.dispatchEvent(
+      new CustomEvent('localeChanged', {
+        detail: { locale }
+      })
+    );
   };
-  
-  // 获取当前语言的名称和标志
-  const currentLanguage = locales.find(locale => locale.code === currentLocale);
-  const languageName = currentLanguage?.name || '中文';
-  const languageFlag = currentLanguage?.flag || '🇨🇳';
   
   return (
     <HoverCard>

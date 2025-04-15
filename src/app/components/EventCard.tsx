@@ -75,6 +75,28 @@ export function EventCard({ event, index }: EventCardProps) {
            currentLocale === 'ja' ? '主催者: ' : 'Organizer: ';
   }, [currentLocale]);
   
+  // 处理图片URL以适应remotePatterns
+  const getImageUrl = useCallback((imageUrl: string) => {
+    // 如果是相对路径，直接使用
+    if (imageUrl.startsWith('/')) {
+      return imageUrl;
+    }
+    
+    // 如果是Unsplash的URL，确保使用配置的域名
+    if (imageUrl.includes('unsplash.com')) {
+      try {
+        // 图片URL保持不变，由Next.js配置的remotePatterns处理
+        return imageUrl;
+      } catch (e) {
+        console.error('Error processing Unsplash image URL:', e);
+        return '/placeholder-image.jpg'; // 提供一个fallback图片
+      }
+    }
+    
+    // 其他外部URL，可能需要处理
+    return imageUrl;
+  }, []);
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -96,7 +118,7 @@ export function EventCard({ event, index }: EventCardProps) {
           {event.image && (
             <div className="h-48 overflow-hidden relative">
               <Image 
-                src={event.image} 
+                src={getImageUrl(event.image)} 
                 alt={getLocaleText(event.title, currentLocale)} 
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
