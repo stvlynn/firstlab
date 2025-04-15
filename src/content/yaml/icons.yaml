@@ -1,0 +1,52 @@
+---
+# 导航图标配置
+navigation_icons:
+  home: "Home"
+  dify: "CurveArray"
+  mcp: "Hammer"
+  events: "BellNotification"
+  about: "InfoCircle"
+  discord: "Discord"
+  language: "Globe"
+  menu: "Menu"
+  close: "Cancel"
+  settings: "Settings"
+  search: "Search"
+
+# 图标样式配置
+icon_styles:
+  default:
+    color: "currentColor"  # 使用当前文本颜色
+    width: "1.25em"
+    height: "1.25em"
+    strokeWidth: 1.5
+  
+  navbar:
+    color: "currentColor"
+    width: "1.25em"
+    height: "1.25em"
+    strokeWidth: 1.5
+  
+  footer:
+    color: "#666"
+    width: "1.25em"
+    height: "1.25em"
+    strokeWidth: 1.5
+  
+  social:
+    color: "#333"
+    width: "1.5em"
+    height: "1.5em"
+    strokeWidth: 1.5
+    
+  button:
+    color: "currentColor"
+    width: "1.25em"
+    height: "1.25em"
+    strokeWidth: 1.5
+    
+  language:
+    color: "currentColor"
+    width: "1.5em"
+    height: "1.5em"
+    strokeWidth: 1.5 

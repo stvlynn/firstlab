@@ -6,6 +6,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { NavIcon } from '@/lib/icons';
 
 // 创建一个上下文来管理全局语言状态
 export const DEFAULT_LOCALE = 'zh';
@@ -15,7 +16,7 @@ export function LanguageSwitcher() {
   const [locales, setLocales] = useState([
     { code: 'zh', name: '中文', flag: '🇨🇳' },
     { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'ja', name: '日本語', flag: '🇯🇵' }
+    { code: 'ja', name: '日本語', flag: 'JP' }
   ]);
   
   // 从本地存储加载语言设置
@@ -65,24 +66,24 @@ export function LanguageSwitcher() {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <button className="flex items-center gap-1 px-3 py-1.5 text-sm text-art-ink bg-white/80 rounded-md transition-colors hover:bg-white">
-          <span>{languageFlag}</span>
+        <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-art-ink bg-white/80 rounded-md transition-all duration-300 hover:bg-white hover:shadow-sm">
+          <NavIcon id="language" styleType="language" className="text-primary" />
           <span>{languageName}</span>
         </button>
       </HoverCardTrigger>
-      <HoverCardContent className="w-48 art-paper p-2" align="end">
+      <HoverCardContent className="w-48 art-paper p-2 shadow-lg" align="end">
         <div className="flex flex-col space-y-1">
           {locales.map((locale) => (
             <button
               key={locale.code}
               onClick={() => changeLanguage(locale.code)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-sm transition-colors ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-sm transition-all duration-200 ${
                 locale.code === currentLocale
-                  ? 'bg-art-highlight text-art-ink'
-                  : 'hover:bg-white/80 text-art-ink'
+                  ? 'bg-art-highlight text-art-ink font-medium'
+                  : 'hover:bg-white/80 text-art-pencil hover:text-art-ink'
               }`}
             >
-              <span>{locale.flag}</span>
+              <span className="w-6 text-center">{locale.flag}</span>
               <span>{locale.name}</span>
             </button>
           ))}

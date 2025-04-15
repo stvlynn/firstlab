@@ -70,6 +70,67 @@ export async function loadMcpCategories(): Promise<Categories> {
 }
 
 /**
+ * 加载图标配置
+ */
+export function loadIconsConfig() {
+  if (typeof window !== 'undefined') {
+    // 客户端环境，从缓存或通过异步请求加载
+    return fetchConfigData('icons');
+  } else {
+    // 服务器端环境，返回默认配置
+    return {
+      navigation_icons: {
+        home: 'Home',
+        dify: 'CurveArray',
+        mcp: 'Hammer',
+        events: 'BellNotification',
+        about: 'InfoCircle',
+        discord: 'Discord',
+        language: 'Globe'
+      },
+      icon_styles: {
+        default: {
+          color: 'currentColor',
+          width: '1.25em',
+          height: '1.25em',
+          strokeWidth: 1.5
+        },
+        navbar: {
+          color: 'currentColor',
+          width: '1.25em',
+          height: '1.25em',
+          strokeWidth: 1.5
+        },
+        footer: {
+          color: '#666',
+          width: '1.25em',
+          height: '1.25em',
+          strokeWidth: 1.5
+        },
+        social: {
+          color: '#333',
+          width: '1.5em',
+          height: '1.5em',
+          strokeWidth: 1.5
+        },
+        button: {
+          color: 'currentColor',
+          width: '1.25em',
+          height: '1.25em',
+          strokeWidth: 1.5
+        },
+        language: {
+          color: 'currentColor',
+          width: '1.5em',
+          height: '1.5em',
+          strokeWidth: 1.5
+        }
+      }
+    };
+  }
+}
+
+/**
  * 根据语言获取本地化文本
  */
 export function getLocaleText(text: { [key: string]: string } | undefined, locale: string): string {

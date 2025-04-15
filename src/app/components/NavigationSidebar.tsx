@@ -7,6 +7,7 @@ import { getLocaleText } from '@/lib/yaml';
 import { motion } from 'framer-motion';
 import { SiteConfig, Categories } from '@/lib/types';
 import { DEFAULT_LOCALE } from './LanguageSwitcher';
+import { NavIcon } from '@/lib/icons';
 
 // 导航项的动画变体
 const itemVariants = {
@@ -99,7 +100,7 @@ export function NavigationSidebar() {
   // 加载中状态
   if (isLoading || !siteConfig) {
     return (
-      <div className="art-paper min-h-screen w-64 p-6 border-r border-art-pencil/10">
+      <div className="art-paper w-64 p-6 border-r border-art-pencil/10">
         <div className="animate-pulse">
           <div className="h-8 w-32 bg-gray-200 rounded mb-8"></div>
           <div className="space-y-4">
@@ -113,11 +114,11 @@ export function NavigationSidebar() {
   }
   
   return (
-    <div className="art-paper min-h-screen w-64 p-6 border-r border-art-pencil/10">
+    <div className="art-paper w-64 p-6 border-r border-art-pencil/10 shadow-sm">
       <div className="mb-8">
         <Link 
           href="/" 
-          className="flex items-center gap-2 text-art-ink"
+          className="flex items-center gap-2 text-art-ink transition-transform hover:scale-105"
         >
           <span className="text-2xl font-bold">First Lab</span>
         </Link>
@@ -133,10 +134,12 @@ export function NavigationSidebar() {
               initial="hidden"
               animate="visible"
               variants={itemVariants}
+              whileHover={{ x: 5 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <Link
                 href={item.path}
-                className={`hand-drawn-tab block ${
+                className={`hand-drawn-tab block transition-all duration-200 ${
                   pathname === item.path ? 'active' : ''
                 }`}
                 style={{ 
@@ -145,7 +148,10 @@ export function NavigationSidebar() {
                     : 'var(--muted)' 
                 } as React.CSSProperties}
               >
-                {getLocaleText(item.name, currentLocale)}
+                <div className="flex items-center gap-3 py-2">
+                  <NavIcon id={item.id} className={`flex-shrink-0 ${pathname === item.path ? 'text-primary' : ''}`} />
+                  <span>{getLocaleText(item.name, currentLocale)}</span>
+                </div>
               </Link>
             </motion.li>
           ))}
@@ -249,13 +255,16 @@ export function NavigationSidebar() {
       {/* Discord 链接 */}
       <div className="mt-12 pt-6 border-t border-art-pencil/10">
         <a
-          href="https://discord.gg/PwZDHH4mv3"
+          href={siteConfig.site.discord}
           target="_blank"
           rel="noopener noreferrer"
-          className="block p-3 bg-[#5865F2] text-white rounded-md text-center transition-transform hover:-translate-y-1"
+          className="inline-flex items-center gap-2 py-2 px-4 bg-[#5865F2] text-white rounded-md transition-all hover:scale-105 hover:shadow-md"
         >
-          {currentLocale === 'zh' ? '加入 Discord 社区' : 
-           currentLocale === 'ja' ? 'Discord コミュニティに参加' : 'Join Discord Community'}
+          <NavIcon id="discord" className="text-white" />
+          <span>
+            {currentLocale === 'zh' ? '加入 Discord' : 
+             currentLocale === 'ja' ? 'Discord に参加' : 'Join Discord'}
+          </span>
         </a>
       </div>
     </div>
