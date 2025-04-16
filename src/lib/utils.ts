@@ -70,11 +70,22 @@ export class HttpClient {
 
   /**
    * 获取Markdown内容
-   * @param path - Markdown文件路径
+   * @param path - Markdown文件路径或完整URL
    * @returns Markdown文本内容
    */
   static async getMarkdown(path: string): Promise<string> {
     try {
+      // 判断是否为完整URL（GitHub raw路径）
+      if (path.startsWith('http')) {
+        console.log(`从外部URL获取Markdown: ${path}`);
+        return await HttpClient.fetch<string>(path, {
+          headers: {
+            'Accept': 'text/plain, application/octet-stream'
+          }
+        }, 2);
+      }
+      
+      // 使用内部API路径
       const apiUrl = `/api/markdown?path=${encodeURIComponent(path)}`;
       return await HttpClient.fetch<string>(apiUrl, undefined, 2);
     } catch (error) {

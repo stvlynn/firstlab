@@ -21,6 +21,7 @@ type EventCardProps = {
 export function EventCard({ event, index }: EventCardProps) {
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
   const [dialogKeyIndex, setDialogKeyIndex] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   // 从localStorage获取语言设置
   useEffect(() => {
@@ -96,6 +97,11 @@ export function EventCard({ event, index }: EventCardProps) {
     // 其他外部URL，可能需要处理
     return imageUrl;
   }, []);
+
+  // 处理卡片点击
+  const handleCardClick = () => {
+    setDialogOpen(true);
+  };
   
   return (
     <motion.div
@@ -107,48 +113,53 @@ export function EventCard({ event, index }: EventCardProps) {
       }}
       className="group"
     >
+      <Card 
+        className="cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+        onClick={handleCardClick}
+      >
+        {event.image && (
+          <div className="h-48 overflow-hidden relative">
+            <Image 
+              src={getImageUrl(event.image)} 
+              alt={getLocaleText(event.title, currentLocale)} 
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              priority={index < 3}
+            />
+          </div>
+        )}
+        
+        <CardHeader className="pb-0">
+          <div className="flex flex-wrap justify-between items-center text-sm text-muted-foreground">
+            <span>{formatDate(event.date)}</span>
+            {event.organizer && (
+              <span className="text-primary">
+                {getOrganizerLabel()}{event.organizer}
+              </span>
+            )}
+          </div>
+        </CardHeader>
+        
+        <CardContent>
+          <h3 className="text-xl font-semibold mb-2">
+            {getLocaleText(event.title, currentLocale)}
+          </h3>
+          
+          <p className="text-muted-foreground">
+            {getLocaleText(event.description, currentLocale)}
+          </p>
+        </CardContent>
+      </Card>
+      
       <MarkdownDialog 
         key={`dialog-${event.link}-${dialogKeyIndex}`}
         title={getLocaleText(event.title, currentLocale)}
         markdownPath={getMarkdownPath()}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
       >
-        <Card 
-          className="cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-        >
-          {event.image && (
-            <div className="h-48 overflow-hidden relative">
-              <Image 
-                src={getImageUrl(event.image)} 
-                alt={getLocaleText(event.title, currentLocale)} 
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                priority={index < 3}
-              />
-            </div>
-          )}
-          
-          <CardHeader className="pb-0">
-            <div className="flex flex-wrap justify-between items-center text-sm text-muted-foreground">
-              <span>{formatDate(event.date)}</span>
-              {event.organizer && (
-                <span className="text-primary">
-                  {getOrganizerLabel()}{event.organizer}
-                </span>
-              )}
-            </div>
-          </CardHeader>
-          
-          <CardContent>
-            <h3 className="text-xl font-semibold mb-2">
-              {getLocaleText(event.title, currentLocale)}
-            </h3>
-            
-            <p className="text-muted-foreground">
-              {getLocaleText(event.description, currentLocale)}
-            </p>
-          </CardContent>
-        </Card>
+        <div className="hidden">触发器内容（已隐藏）</div>
       </MarkdownDialog>
     </motion.div>
   );

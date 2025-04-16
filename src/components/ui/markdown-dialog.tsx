@@ -22,6 +22,8 @@ interface MarkdownDialogProps {
   markdownPath: string;
   children: React.ReactNode;
   className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 interface MarkdownMetadata {
@@ -84,8 +86,13 @@ const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; local
       const loadStartTime = performance.now(); // Record load start time
       
       try {
+        // 判断是否为GitHub URL
+        const isGitHubUrl = markdownPath.startsWith('https://raw.githubusercontent.com/');
+        
         // Use HttpClient to get content
-        const text = await HttpClient.getMarkdown(markdownPath.replace('/api/markdown?path=', ''));
+        const text = isGitHubUrl 
+          ? await HttpClient.getMarkdown(markdownPath)
+          : await HttpClient.getMarkdown(markdownPath.replace('/api/markdown?path=', ''));
         
         if (!isMounted) return;
         
@@ -419,11 +426,16 @@ const MarkdownDialog: React.FC<MarkdownDialogProps> = ({
   markdownPath,
   children,
   className,
+  open,
+  onOpenChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
   const [mountKey, setMountKey] = useState<number>(Date.now());
-
+  
+  // 使用受控模式或内部状态
+  const isOpen = open !== undefined ? open : internalIsOpen;
+  
   // Listen for language changes
   useEffect(() => {
     const savedLocale = localStorage.getItem('preferredLanguage');
@@ -446,13 +458,19 @@ const MarkdownDialog: React.FC<MarkdownDialogProps> = ({
   }, [currentLocale]);
 
   // Force update content when opening dialog
-  const handleOpenChange = (open: boolean) => {
-    if (open) {
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
       // Force update when opening dialog
       console.log(`Dialog opening with locale: ${currentLocale}, path: ${markdownPath}`);
       setMountKey(Date.now());
     }
-    setIsOpen(open);
+    
+    // 使用传入的状态更新方法或内部状态
+    if (onOpenChange) {
+      onOpenChange(newOpen);
+    } else {
+      setInternalIsOpen(newOpen);
+    }
   };
 
   return (
@@ -462,7 +480,7 @@ const MarkdownDialog: React.FC<MarkdownDialogProps> = ({
           {children}
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto art-paper rounded-xl shadow-xl">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto art-paper rounded-xl shadow-xl">
         <DialogHeader>
           {title && <DialogTitle className="text-2xl font-bold text-art-ink">{title}</DialogTitle>}
         </DialogHeader>
