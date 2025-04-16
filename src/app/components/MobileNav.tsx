@@ -13,6 +13,7 @@ import { NavIcon } from '@/lib/icons';
 import { motion } from 'framer-motion';
 import { getLocaleText } from '@/lib/yaml';
 import { DEFAULT_LOCALE } from './LanguageSwitcher';
+import { MobileLanguageSwitcher } from './MobileLanguageSwitcher';
 
 // 导航项接口
 interface NavigationItem {
@@ -99,7 +100,7 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="art-paper">
         <div className="flex flex-col h-full">
-          <div className="mb-8 pt-4">
+          <div className="mb-8 pt-4 flex justify-between items-center">
             <Link 
               href="/" 
               className="flex items-center gap-2 text-art-ink transition-transform hover:scale-105"
@@ -116,6 +117,9 @@ export function MobileNav() {
               </div>
               <span className="text-2xl font-bold">First Lab</span>
             </Link>
+            
+            {/* 移动端语言切换 */}
+            <MobileLanguageSwitcher />
           </div>
           
           <nav className="space-y-6 flex-1">

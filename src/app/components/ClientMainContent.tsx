@@ -38,7 +38,7 @@ export function ClientMainContent({ children }: { children: React.ReactNode }) {
             <span className="text-xl font-bold">First Lab</span>
           </div>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center z-20">
           <LanguageSwitcher />
         </div>
       </div>

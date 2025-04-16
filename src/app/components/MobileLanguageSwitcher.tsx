@@ -10,7 +10,7 @@ import {
 import { NavIcon } from '@/lib/icons';
 
 // 创建一个上下文来管理全局语言状态
-export const DEFAULT_LOCALE = 'zh';
+import { DEFAULT_LOCALE } from './LanguageSwitcher';
 
 // 支持的语言列表
 const SUPPORTED_LOCALES = [
@@ -33,7 +33,7 @@ function getBrowserLanguage(): string {
   return isSupported ? browserLang : DEFAULT_LOCALE;
 }
 
-export function LanguageSwitcher() {
+export function MobileLanguageSwitcher() {
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
   const [locales, setLocales] = useState(SUPPORTED_LOCALES);
   const [open, setOpen] = useState(false);
@@ -85,8 +85,7 @@ export function LanguageSwitcher() {
     };
   }, []);
   
-  // 获取语言名称
-  const languageName = locales.find(locale => locale.code === currentLocale)?.name || '中文';
+  // 获取语言标志
   const languageFlag = locales.find(locale => locale.code === currentLocale)?.flag || '🇨🇳';
   
   const changeLanguage = (locale: string) => {
@@ -111,16 +110,14 @@ export function LanguageSwitcher() {
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button 
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-art-ink bg-white/80 rounded-md transition-all duration-300 hover:bg-white hover:shadow-sm"
+          className="flex items-center justify-center h-8 w-8 rounded-full bg-white/80 hover:bg-white transition-colors"
           aria-label="切换语言"
         >
-          <NavIcon id="language" styleType="language" className="text-primary" />
-          <span className="hidden sm:inline">{languageName}</span>
-          <span className="sm:hidden">{languageFlag}</span>
+          <span className="text-lg">{languageFlag}</span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        className="w-48 art-paper p-1 shadow-lg"
+        className="w-36 art-paper p-1 shadow-lg"
         align="end"
         forceMount
       >
@@ -134,7 +131,7 @@ export function LanguageSwitcher() {
                 : 'hover:bg-white/80 text-art-pencil hover:text-art-ink'
             }`}
           >
-            <span className="w-6 text-center">{locale.flag}</span>
+            <span className="text-center">{locale.flag}</span>
             <span>{locale.name}</span>
           </DropdownMenuItem>
         ))}
