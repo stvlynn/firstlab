@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { Database } from '@/types/supabase'
+import { McpCategory } from '@/app/mcp/McpClientWrapper'
 
 // 创建服务器组件使用的 Supabase 客户端
 export const createServerSupabaseClient = () => {
@@ -52,7 +53,7 @@ export const getMcpItemsServer = async () => {
 }
 
 // 根据分类获取 MCP 数据（服务器端版本）
-export const getMcpItemsByCategoryServer = async (category: string) => {
+export const getMcpItemsByCategoryServer = async (category: McpCategory) => {
   try {
     console.log(`Server: Fetching MCP items by category: ${category}`)
     const supabase = createServerSupabaseClient()

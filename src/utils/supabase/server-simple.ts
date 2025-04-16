@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/types/supabase'
+import { McpCategory } from '@/app/mcp/McpClientWrapper'
 
 // 创建服务器组件使用的简单 Supabase 客户端
 export const createServerSupabase = () => {
@@ -54,6 +55,31 @@ export const getMcpItemsByCategoryServer = async (category: string) => {
     return data || []
   } catch (error) {
     console.error(`Server: Failed to fetch MCP items for category ${category}:`, error)
+    return []
+  }
+}
+
+// 根据分类获取 MCP 数据（简化版服务器端）
+export const getMcpItemsByCategoryServerSimple = async (category: McpCategory) => {
+  try {
+    console.log(`ServerSimple: Fetching MCP items by category: ${category}`)
+    const supabase = createServerSupabase()
+    
+    const { data, error } = await supabase
+      .from('mcp')
+      .select('*')
+      .eq('category', category)
+      .order('updated_at', { ascending: false })
+    
+    if (error) {
+      console.error('ServerSimple: Error fetching MCP items by category:', error)
+      return []
+    }
+    
+    console.log(`ServerSimple: Successfully fetched ${data?.length || 0} MCP items for category ${category}`)
+    return data || []
+  } catch (error) {
+    console.error(`ServerSimple: Failed to fetch MCP items for category ${category}:`, error)
     return []
   }
 } 

@@ -2,6 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/types/supabase'
+import { McpCategory } from '@/app/mcp/McpClientWrapper'
 
 // 客户端环境使用的 Supabase 客户端
 export const createSupabaseClient = () => {
@@ -49,7 +50,7 @@ export const getMcpItems = async () => {
 }
 
 // 根据分类获取 MCP 数据
-export const getMcpItemsByCategory = async (category: string) => {
+export const getMcpItemsByCategory = async (category: McpCategory) => {
   try {
     console.log(`Fetching MCP items by category: ${category}`)
     const supabase = createSupabaseClient()
