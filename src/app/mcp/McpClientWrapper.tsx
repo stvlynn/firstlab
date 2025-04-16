@@ -12,9 +12,9 @@ export interface McpItem {
   id: string;
   title: string;
   description: string;
-  image_url?: string;
-  content?: string;
-  repo_id?: string;
+  image_url?: string | null;
+  content?: string | null;
+  repo_id?: string | null;
   updated_at: string;
   category: McpCategory;
 }

@@ -6,6 +6,9 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+// MCP分类类型
+export type McpCategory = 'writing' | 'filesystem' | 'device';
+
 export interface Database {
   public: {
     Tables: {
@@ -18,7 +21,7 @@ export interface Database {
           content: string | null
           repo_id: string | null
           updated_at: string
-          category: string
+          category: McpCategory
         }
         Insert: {
           id?: string
@@ -28,7 +31,7 @@ export interface Database {
           content?: string | null
           repo_id?: string | null
           updated_at?: string
-          category: string
+          category: McpCategory
         }
         Update: {
           id?: string
@@ -38,7 +41,7 @@ export interface Database {
           content?: string | null
           repo_id?: string | null
           updated_at?: string
-          category?: string
+          category?: McpCategory
         }
         Relationships: []
       }

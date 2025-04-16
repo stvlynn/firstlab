@@ -86,6 +86,21 @@ export function McpCard({ item }: McpCardProps) {
     return categoryNames[category][currentLocale] || categoryNames[category].en;
   };
 
+  // 检查是否有内容可以显示
+  const hasContent = () => {
+    return Boolean(item.repo_id) || Boolean(item.content);
+  };
+
+  // 获取对话框的内容源
+  const getContentSource = () => {
+    if (item.repo_id) {
+      return getReadmeUrl();
+    } else if (item.content) {
+      return item.content;
+    }
+    return '';
+  };
+
   return (
     <>
       <Card 
@@ -130,11 +145,11 @@ export function McpCard({ item }: McpCardProps) {
         </CardFooter>
       </Card>
 
-      {item.repo_id && (
+      {hasContent() && (
         <MarkdownDialog
           key={`dialog-${item.id}-${dialogKeyIndex}`}
           title={item.title}
-          markdownPath={getReadmeUrl()}
+          markdownPath={getContentSource()}
           open={dialogOpen}
           onOpenChange={setDialogOpen}
         >
