@@ -11,14 +11,16 @@ const nextConfig: NextConfig = {
     }
   },
   
-  // 配置图片域名
+  // 配置图片域名 - 设置为不优化以允许所有域名
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '**',
-      }
+    unoptimized: true,
+    // 如果仍需要特定域名的优化，可以保留这些域名
+    domains: [
+      'images.unsplash.com',
+      'images-ext-1.discordapp.net',
+      'opengraph.githubassets.com',
+      'raw.githubusercontent.com',
+      'github.com'
     ]
   },
   

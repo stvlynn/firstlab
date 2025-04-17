@@ -7,10 +7,11 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function McpPage() {
+  console.log('开始加载 MCP 页面...');
+  
   try {
-    // 获取数据
+    // 按照 Supabase 文档的方式直接获取数据
     const supabase = await createServerSupabase();
-    
     const { data: mcpItems, error } = await supabase
       .from('mcp')
       .select('*')
@@ -21,14 +22,23 @@ export default async function McpPage() {
       throw new Error(`Supabase 查询错误: ${error.message}`);
     }
     
+    console.log(`成功获取 ${mcpItems?.length || 0} 条 MCP 数据`);
+    
     // 验证数据格式
     const validCategories: McpCategory[] = ['writing', 'filesystem', 'device'];
     const invalidItems = mcpItems?.filter(item => 
       !validCategories.includes(item.category as McpCategory)
     ) || [];
     
+    if (invalidItems.length > 0) {
+      console.warn(`发现 ${invalidItems.length} 条数据的 category 值不符合要求:`, 
+        invalidItems.map(item => ({id: item.id, category: item.category}))
+      );
+    }
+    
     // 如果没有数据，显示提示信息
     if (!mcpItems || mcpItems.length === 0) {
+      console.log('没有获取到任何 MCP 数据');
       return (
         <div className="flex flex-col justify-center items-center min-h-[50vh] gap-4">
           <p className="text-art-pencil font-bold">没有找到 MCP 数据</p>
@@ -43,8 +53,9 @@ export default async function McpPage() {
     // 渲染客户端组件，传入数据
     return <McpClientWrapper mcpItems={mcpItems} />;
   } catch (err) {
-    // 捕获并显示错误信息
+    // 捕获并显示更详细的错误信息
     const error = err as Error;
+    console.error('MCP 页面发生错误:', error);
     
     return (
       <div className="flex flex-col justify-center items-center min-h-[50vh] gap-4">

@@ -9,10 +9,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneLight } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { DEFAULT_LOCALE } from '@/app/components/LanguageSwitcher';
 import * as yaml from 'js-yaml';
 import { HttpClient } from '@/lib/utils';
 import Image from 'next/image';
+import { FaGithub } from 'react-icons/fa';
+import { NavIcon } from '@/lib/icons';
 
 // Debug mode toggle - default to false in production
 const DEBUG_MODE_ENABLED = false;
@@ -24,6 +28,7 @@ interface MarkdownDialogProps {
   className?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  repo_id?: string | null;
 }
 
 interface MarkdownMetadata {
@@ -34,14 +39,22 @@ interface MarkdownMetadata {
   };
 }
 
+// Add GitHub author information
+interface GitHubInfo {
+  author: string;
+  repoName: string;
+  avatarUrl: string | null;
+}
+
 // Create a standalone content component to ensure the latest language is used each time the dialog opens
-const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; locale: string }) => {
+const MarkdownContent = ({ markdownPath, locale, title, repo_id }: { markdownPath: string; locale: string; title?: string; repo_id?: string | null }) => {
   const [content, setContent] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<MarkdownMetadata | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [rawContent, setRawContent] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0); // Add refresh key
+  const [githubInfo, setGithubInfo] = useState<GitHubInfo | null>(null);
   
   // Cache request results to avoid repeated loading
   const cacheKey = `${markdownPath}-${locale}-${refreshKey}`;
@@ -226,6 +239,27 @@ const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; local
     parseTime: 0
   });
 
+  // Get GitHub information
+  useEffect(() => {
+    if (repo_id) {
+      // Extract author and repository name from repo_id (format: author/repo)
+      const parts = repo_id.split('/');
+      if (parts.length === 2) {
+        const author = parts[0];
+        const repoName = parts[1];
+        
+        // Build GitHub avatar URL
+        const avatarUrl = `https://github.com/${author}.png`;
+        
+        setGithubInfo({
+          author,
+          repoName,
+          avatarUrl
+        });
+      }
+    }
+  }, [repo_id]);
+
   // Render loading state
   if (isLoading) {
     return (
@@ -303,8 +337,42 @@ const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; local
   // Render normal content
   return (
     <>
+      {/* GitHub author information */}
+      {githubInfo && (
+        <div className="flex items-center gap-3 mb-6 border-b pb-3">
+          <div className="flex items-center gap-3">
+            {githubInfo.avatarUrl && (
+              <div className="w-10 h-10 rounded-full overflow-hidden">
+                <img 
+                  src={githubInfo.avatarUrl} 
+                  alt={`${githubInfo.author}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <div>
+              <div className="font-semibold text-art-charcoal">{githubInfo.author}</div>
+              <div className="text-sm text-art-charcoal/70">Created By</div>
+            </div>
+          </div>
+          
+          <div className="flex-grow"></div>
+          
+          <a 
+            href={`https://github.com/${githubInfo.author}/${githubInfo.repoName}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-sm text-art-charcoal/70 hover:text-art-charcoal"
+          >
+            <FaGithub className="w-5 h-5" />
+            <span>{githubInfo.author}/{githubInfo.repoName}</span>
+          </a>
+        </div>
+      )}
+
+      {/* Metadata and image */}
       {metadata?.metadata && (
-        <div className="flex flex-wrap text-sm text-art-pencil mt-2 gap-2">
+        <div className="flex flex-wrap text-sm text-art-pencil mt-2 gap-2 mb-4">
           <span>
             {locale === 'zh' ? 'Date: ' : 
              locale === 'ja' ? 'Date: ' : 'Date: '}
@@ -320,13 +388,13 @@ const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; local
       )}
       
       {metadata?.metadata?.image && (
-        <div className="w-full h-48 md:h-64 overflow-hidden mb-6 rounded-lg relative">
-          <Image 
-            src={metadata.metadata.image} 
-            alt="Event image"
-            fill 
-            priority
+        <div className="w-full h-52 relative mb-6 overflow-hidden rounded-lg">
+          <Image
+            src={metadata.metadata.image}
+            alt={title || "Content image"}
+            fill
             className="object-cover"
+            priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
@@ -338,11 +406,93 @@ const MarkdownContent = ({ markdownPath, locale }: { markdownPath: string; local
           <ReactMarkdown
             skipHtml={false}
             components={{
-              h1: ({...props}) => <h1 className="text-2xl font-bold mb-4" {...props} />,
-              h2: ({...props}) => <h2 className="text-xl font-bold mb-3" {...props} />,
+              h1: ({...props}) => <h1 className="text-3xl font-bold mb-6 mt-2 border-b pb-2" {...props} />,
+              h2: ({...props}) => <h2 className="text-2xl font-bold mb-4 mt-6" {...props} />,
+              h3: ({...props}) => <h3 className="text-xl font-semibold mb-3 mt-5" {...props} />,
               p: ({...props}) => <p className="mb-4" {...props} />,
               ul: ({...props}) => <ul className="list-disc pl-5 mb-4" {...props} />,
-              li: ({...props}) => <li className="mb-1" {...props} />
+              li: ({...props}) => <li className="mb-1" {...props} />,
+              img: ({node, ...props}) => {
+                // 处理图片URL
+                let src = props.src || '';
+                
+                // 如果是相对路径且存在repo_id，则转换为GitHub raw URL
+                if (src && !src.startsWith('http') && !src.startsWith('data:') && !src.startsWith('/') && githubInfo) {
+                  // 构建GitHub raw URL
+                  src = `https://raw.githubusercontent.com/${githubInfo.author}/${githubInfo.repoName}/main/${src}`;
+                }
+                
+                return (
+                  <div className="my-6">
+                    <img 
+                      src={src} 
+                      alt={props.alt || ""} 
+                      className="rounded-md max-w-full mx-auto"
+                      style={{ maxHeight: '500px' }}
+                    />
+                    {props.alt && <div className="text-center text-sm text-gray-500 mt-2">{props.alt}</div>}
+                  </div>
+                );
+              },
+              code: ({node, inline, className, children, ...props}: any) => {
+                const match = /language-(\w+)/.exec(className || '');
+                const [isCopied, setIsCopied] = useState(false);
+                
+                const handleCopy = (e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  const code = String(children).replace(/\n$/, '');
+                  navigator.clipboard.writeText(code)
+                    .then(() => {
+                      setIsCopied(true);
+                      setTimeout(() => setIsCopied(false), 2000);
+                    })
+                    .catch(err => {
+                      console.error('复制失败:', err);
+                    });
+                };
+                
+                if (inline) {
+                  return (
+                    <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props}>
+                      {children}
+                    </code>
+                  );
+                }
+                
+                if (match) {
+                  return (
+                    <div className="mb-4 mt-3 rounded-md overflow-hidden border border-gray-200">
+                      <div className="bg-gray-100 px-3 py-1 text-xs text-gray-600 border-b border-gray-200 flex justify-between items-center">
+                        <span>{match[1]}</span>
+                        <button 
+                          className="p-1 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
+                          onClick={handleCopy}
+                          title={isCopied ? "已复制!" : "复制代码"}
+                        >
+                          {isCopied && <span className="text-green-600 text-xs">已复制!</span>}
+                          <NavIcon id="copy" size="16px" className={isCopied ? "text-green-600" : "text-gray-500 hover:text-gray-700"} />
+                        </button>
+                      </div>
+                      <SyntaxHighlighter
+                        style={oneLight}
+                        language={match[1]}
+                        PreTag="div"
+                        className="rounded-b-md"
+                        showLineNumbers
+                        {...props}
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
+                    </div>
+                  );
+                }
+                
+                return (
+                  <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props}>
+                    {children}
+                  </code>
+                );
+              }
             }}
           >
             {content}
@@ -428,6 +578,7 @@ const MarkdownDialog: React.FC<MarkdownDialogProps> = ({
   className,
   open,
   onOpenChange,
+  repo_id,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [currentLocale, setCurrentLocale] = useState(DEFAULT_LOCALE);
@@ -482,14 +633,16 @@ const MarkdownDialog: React.FC<MarkdownDialogProps> = ({
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto art-paper rounded-xl shadow-xl">
         <DialogHeader>
-          {title && <DialogTitle className="text-2xl font-bold text-art-ink">{title}</DialogTitle>}
+          {title && <DialogTitle className="text-3xl font-bold text-art-ink pb-2 border-b mb-6">{title}</DialogTitle>}
         </DialogHeader>
         
         {/* Force component remount when language changes using key prop */}
         <MarkdownContent 
           key={`${mountKey}-${currentLocale}`} 
           markdownPath={markdownPath} 
-          locale={currentLocale} 
+          locale={currentLocale}
+          title={title}
+          repo_id={repo_id}
         />
       </DialogContent>
     </Dialog>

@@ -50,7 +50,7 @@ export function McpCard({ item }: McpCardProps) {
   // 生成GitHub仓库的README.md URL
   const getReadmeUrl = () => {
     if (!item.repo_id) return '';
-    return `https://raw.githubusercontent.com/${item.repo_id}/refs/heads/main/readme.md`;
+    return `https://raw.githubusercontent.com/${item.repo_id}/refs/heads/main/README.md`;
   };
 
   // 获取分类标签颜色
@@ -82,6 +82,18 @@ export function McpCard({ item }: McpCardProps) {
         en: 'Device Usage'
       }
     };
+    
+    // 安全检查：确保category是有效值
+    if (!categoryNames[category]) {
+      console.warn(`无效的分类: ${category}，使用默认值`);
+      return currentLocale === 'zh' ? '未分类' : 
+             currentLocale === 'ja' ? '未分類' : 'Uncategorized';
+    }
+    
+    // 安全检查：确保locale是有效值
+    if (!categoryNames[category][currentLocale]) {
+      return categoryNames[category].en || 'Uncategorized';
+    }
     
     return categoryNames[category][currentLocale] || categoryNames[category].en;
   };
@@ -132,6 +144,15 @@ export function McpCard({ item }: McpCardProps) {
             </span>
           </div>
           <h3 className="text-xl font-semibold mb-2 text-art-ink">{item.title}</h3>
+          
+          {/* 内容预览 */}
+          {item.content && (
+            <div className="mb-2 text-sm text-gray-600 line-clamp-2">
+              {item.content.replace(/^---[\s\S]*?---/, '').trim().slice(0, 150)}
+              {item.content.length > 150 && '...'}
+            </div>
+          )}
+          
           <p className="text-art-charcoal line-clamp-3">{item.description}</p>
         </CardContent>
         
@@ -152,6 +173,7 @@ export function McpCard({ item }: McpCardProps) {
           markdownPath={getContentSource()}
           open={dialogOpen}
           onOpenChange={setDialogOpen}
+          repo_id={item.repo_id}
         >
           <div className="hidden">触发器内容（已隐藏）</div>
         </MarkdownDialog>
