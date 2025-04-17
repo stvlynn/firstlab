@@ -44,6 +44,28 @@ export function McpClientWrapper({ mcpItems }: McpClientWrapperProps) {
     };
   }, []);
 
+  // 添加组件初始化日志
+  useEffect(() => {
+    console.log('McpClientWrapper 初始化', {
+      接收的数据条数: mcpItems.length,
+      当前语言: currentLocale,
+      初始分类: selectedCategory
+    });
+    
+    // 检查接收到的数据格式是否正确
+    if (mcpItems.length > 0) {
+      const hasValidCategories = mcpItems.every(item => 
+        typeof item.category === 'string' && 
+        ['writing', 'filesystem', 'device'].includes(item.category)
+      );
+      
+      console.log('数据格式检查:', {
+        有效的category字段: hasValidCategories,
+        样例数据: mcpItems.slice(0, 2)
+      });
+    }
+  }, [mcpItems]);
+
   // 获取分类名称
   const getCategoryName = (category: McpCategory | 'all') => {
     if (category === 'all') {
@@ -77,6 +99,15 @@ export function McpClientWrapper({ mcpItems }: McpClientWrapperProps) {
     ? mcpItems 
     : mcpItems.filter(item => item.category === selectedCategory);
   
+  // 添加过滤结果日志
+  useEffect(() => {
+    console.log('分类过滤结果:', {
+      分类: selectedCategory,
+      总数据条数: mcpItems.length,
+      过滤后条数: filteredItems.length
+    });
+  }, [selectedCategory, mcpItems, filteredItems]);
+  
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-art-ink">
@@ -107,6 +138,20 @@ export function McpClientWrapper({ mcpItems }: McpClientWrapperProps) {
             {currentLocale === 'zh' ? '暂无MCP资源' : 
              currentLocale === 'ja' ? 'MCPリソースがありません' : 'No MCP resources available'}
           </p>
+          
+          {/* 添加调试信息 */}
+          <div className="mt-4 text-xs text-gray-500">
+            <p>接收的数据条数: {mcpItems.length}</p>
+            <p>当前分类: {selectedCategory}</p>
+            {process.env.NODE_ENV === 'development' && mcpItems.length > 0 && (
+              <details className="mt-2">
+                <summary>调试信息</summary>
+                <pre className="text-left bg-gray-100 p-2 rounded mt-2 overflow-auto max-h-40">
+                  {JSON.stringify(mcpItems[0], null, 2)}
+                </pre>
+              </details>
+            )}
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -4,8 +4,8 @@ import { Database } from '@/types/supabase'
 import { McpCategory } from '@/app/mcp/McpClientWrapper'
 
 // 创建服务器组件使用的 Supabase 客户端
-export const createServerSupabaseClient = () => {
-  const cookieStore = cookies()
+export const createServerSupabaseClient = async () => {
+  const cookieStore = await cookies()
   
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,8 +13,7 @@ export const createServerSupabaseClient = () => {
     {
       cookies: {
         get(name) {
-          const cookie = cookieStore.get(name)
-          return cookie?.value
+          return cookieStore.get(name)?.value
         },
         set(name, value, options) {
           // 这里我们不能直接在服务器端设置 cookie
@@ -32,7 +31,7 @@ export const createServerSupabaseClient = () => {
 export const getMcpItemsServer = async () => {
   try {
     console.log('Fetching MCP items from server...')
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     
     const { data, error } = await supabase
       .from('mcp')
@@ -56,7 +55,7 @@ export const getMcpItemsServer = async () => {
 export const getMcpItemsByCategoryServer = async (category: McpCategory) => {
   try {
     console.log(`Server: Fetching MCP items by category: ${category}`)
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     
     const { data, error } = await supabase
       .from('mcp')

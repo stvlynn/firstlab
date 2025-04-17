@@ -16,6 +16,9 @@ export const getMcpItemsServer = async () => {
     console.log('Fetching MCP items from server...')
     const supabase = createServerSupabase()
     
+    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('Using ANON KEY length:', (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').substring(0, 10) + '...')
+    
     const { data, error } = await supabase
       .from('mcp')
       .select('*')
@@ -26,16 +29,31 @@ export const getMcpItemsServer = async () => {
       return []
     }
     
-    console.log(`Server: Successfully fetched ${data?.length || 0} MCP items`)
+    if (!data || data.length === 0) {
+      console.log('Server: No MCP items found in the database')
+    } else {
+      console.log(`Server: Successfully fetched ${data.length} MCP items`)
+      // 打印第一条数据的结构，不打印敏感内容
+      if (data.length > 0) {
+        const sampleData = { ...data[0] }
+        console.log('Sample MCP item structure:', JSON.stringify(sampleData, null, 2))
+      }
+    }
+    
     return data || []
   } catch (error) {
     console.error('Server: Failed to fetch MCP items:', error)
+    // 更详细的错误信息
+    if (error instanceof Error) {
+      console.error('Error details:', error.message)
+      console.error('Error stack:', error.stack)
+    }
     return []
   }
 }
 
 // 根据分类获取 MCP 数据（服务器端版本）
-export const getMcpItemsByCategoryServer = async (category: string) => {
+export const getMcpItemsByCategoryServer = async (category: McpCategory) => {
   try {
     console.log(`Server: Fetching MCP items by category: ${category}`)
     const supabase = createServerSupabase()
