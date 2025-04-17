@@ -11,6 +11,16 @@ const ClientMainContent = dynamic(() => import('./components/ClientMainContent')
   ssr: true,
 });
 
+// 动态导入Google Analytics组件
+const GoogleAnalytics = dynamic(() => import('@/lib/analytics'), {
+  ssr: false,
+});
+
+// 动态导入路由变化监听器
+const RouteChangeTracker = dynamic(() => import('@/lib/routeChanges'), {
+  ssr: false,
+});
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,7 +41,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics */}
+        <GoogleAnalytics />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-watercolor-paper`}>
+        {/* 路由变化监听 */}
+        <RouteChangeTracker />
+        
         <div className="flex flex-col min-h-screen">
           {/* 左侧导航 - 在移动设备上隐藏 */}
           <div className="hidden md:block">

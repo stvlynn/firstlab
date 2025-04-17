@@ -252,8 +252,8 @@ export function NavigationSidebar() {
         {!isCollapsed && isMcpPath && mcpCategories && (
           <div className="py-4">
             <h3 className="mb-4 text-sm font-semibold text-art-charcoal">
-              {currentLocale === 'zh' ? 'MCP 资源' : 
-               currentLocale === 'ja' ? 'MCP リソース' : 'MCP Resources'}
+              {currentLocale === 'zh' ? 'MCP 商店' : 
+               currentLocale === 'ja' ? 'MCP マーケット' : 'MCP Store'}
             </h3>
             <motion.ul
               initial="hidden"
