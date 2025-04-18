@@ -4,21 +4,12 @@ import { NavigationSidebar } from './components/NavigationSidebar';
 import { CollapseSidebarButton } from './components/CollapseSidebarButton';
 import dynamic from 'next/dynamic';
 import { metadata } from './metadata'; // 直接导入元数据
+import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
 import "./globals.css";
 
 // 动态导入客户端组件
 const ClientMainContent = dynamic(() => import('./components/ClientMainContent').then(mod => mod.ClientMainContent), {
   ssr: true,
-});
-
-// 动态导入Google Analytics组件
-const GoogleAnalytics = dynamic(() => import('@/lib/analytics'), {
-  ssr: false,
-});
-
-// 动态导入路由变化监听器
-const RouteChangeTracker = dynamic(() => import('@/lib/routeChanges'), {
-  ssr: false,
 });
 
 const geistSans = Geist({
@@ -41,13 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Google Analytics */}
-        <GoogleAnalytics />
-      </head>
+      <head />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-watercolor-paper`}>
-        {/* 路由变化监听 */}
-        <RouteChangeTracker />
+        {/* 分析跟踪 */}
+        <AnalyticsWrapper />
         
         <div className="flex flex-col min-h-screen">
           {/* 左侧导航 - 在移动设备上隐藏 */}
