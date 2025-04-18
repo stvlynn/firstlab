@@ -4,6 +4,7 @@ import { NavigationSidebar } from './components/NavigationSidebar';
 import { CollapseSidebarButton } from './components/CollapseSidebarButton';
 import dynamic from 'next/dynamic';
 import { metadata } from './metadata'; // 直接导入元数据
+import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
 import "./globals.css";
 
 // 动态导入客户端组件
@@ -31,7 +32,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-watercolor-paper`}>
+        {/* 分析跟踪 */}
+        <AnalyticsWrapper />
+        
         <div className="flex flex-col min-h-screen">
           {/* 左侧导航 - 在移动设备上隐藏 */}
           <div className="hidden md:block">
