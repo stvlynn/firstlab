@@ -1,6 +1,10 @@
 ---
-title: ComfyUI部署指南
-description: 学习如何部署ComfyUI到不同环境，包括本地和云服务器
+title-zh: "ComfyUI部署指南"
+title-en: "ComfyUI Deployment Guide"
+title-ja: "ComfyUI デプロイメントガイド"
+description-zh: "学习如何部署ComfyUI到不同环境，包括本地和云服务器"
+description-en: "Learn how to deploy ComfyUI to different environments, including local and cloud servers"
+description-ja: "ローカルおよびクラウドサーバーを含む、さまざまな環境へのComfyUIのデプロイ方法を学ぶ"
 created_at: 2023-12-01
 cover_image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 tag-zh: "部署"

@@ -1,6 +1,10 @@
 ---
-title: ComfyUI高级技术指南
-description: 掌握ComfyUI的高级功能和工作流优化方法
+title-zh: "ComfyUI高级技术指南"
+title-en: "ComfyUI Advanced Techniques Guide"
+title-ja: "ComfyUI 高度な技術ガイド"
+description-zh: "掌握ComfyUI的高级功能和工作流优化方法"
+description-en: "Master advanced features and workflow optimization methods for ComfyUI"
+description-ja: "ComfyUIの高度な機能とワークフロー最適化方法をマスターする"
 created_at: 2023-11-10
 updated_at: 2023-11-25
 cover_image: "https://images.unsplash.com/photo-1612909744608-89153c34ad37?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -8,6 +12,7 @@ tag-zh: "高级"
 tag-en: "Advanced"
 tag-ja: "上級"
 tag_color: "purple"
+author: "FirstLab AI研究团队"
 ---
 
 # ComfyUI高级技术指南

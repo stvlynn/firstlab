@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DEFAULT_LOCALE } from '../components/LanguageSwitcher';
+import { DEFAULT_LOCALE } from '@/app/components/LanguageSwitcher';
 import { motion } from 'framer-motion';
-import MarkdownDialog from '@/components/ui/markdown-dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { MarkdownDialog } from '@/components/ui/markdown-dialog';
 import Link from 'next/link';
 import { NavIcon } from '@/lib/icons';
 import Image from 'next/image';
@@ -21,6 +22,7 @@ interface Tutorial {
   coverImage?: string;
   tag?: Record<string, string>;
   tagColor?: string;
+  author?: string;
 }
 
 // 定义元数据类型
@@ -30,6 +32,7 @@ interface TutorialMetadata {
   tagEn?: string;
   tagJa?: string;
   tagColor?: string;
+  author?: string;
 }
 
 // 定义图片生成教程数据
@@ -219,7 +222,8 @@ export default function ImageGenerationPage() {
             tagZh: data['tag-zh'] as string,
             tagEn: data['tag-en'] as string,
             tagJa: data['tag-ja'] as string,
-            tagColor: data.tag_color as string
+            tagColor: data.tag_color as string,
+            author: data.author as string
           };
           
           // 更新教程对象
@@ -231,7 +235,8 @@ export default function ImageGenerationPage() {
               en: metadata.tagEn || getLocaleText(UI_TEXTS.level[tutorial.level], 'en'),
               ja: metadata.tagJa || getLocaleText(UI_TEXTS.level[tutorial.level], 'ja')
             },
-            tagColor: metadata.tagColor || getLevelColorClass(tutorial.level)
+            tagColor: metadata.tagColor || getLevelColorClass(tutorial.level),
+            author: metadata.author
           };
         } catch (error) {
           console.error(`Error fetching metadata for ${tutorial.markdownPath}:`, error);
@@ -364,6 +369,14 @@ export default function ImageGenerationPage() {
                   {getLocaleText(UI_TEXTS.view, currentLocale)}
                   {isMounted && <NavIcon id="nav-arrow-right" className="ml-1 h-4 w-4" />}
                 </div>
+                {tutorial.author && (
+                  <div className="flex items-center gap-1.5">
+                    <NavIcon id="user" className="w-3.5 h-3.5 text-gray-400" />
+                    <span className="text-xs text-gray-500 font-medium">
+                      {tutorial.author}
+                    </span>
+                  </div>
+                )}
               </CardFooter>
             </Card>
           </motion.div>
@@ -425,10 +438,18 @@ export default function ImageGenerationPage() {
                   </div>
                 </CardContent>
                 <CardFooter className="justify-between">
-                  <div className="text-sm text-green-600 hover:underline flex items-center">
+                  <div className="text-sm text-primary hover:underline flex items-center">
                     {getLocaleText(UI_TEXTS.view, currentLocale)}
                     {isMounted && <NavIcon id="nav-arrow-right" className="ml-1 h-4 w-4" />}
                   </div>
+                  {practice.author && (
+                    <div className="flex items-center gap-1.5">
+                      <NavIcon id="user" className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-xs text-gray-500 font-medium">
+                        {practice.author}
+                      </span>
+                    </div>
+                  )}
                 </CardFooter>
               </Card>
             </motion.div>

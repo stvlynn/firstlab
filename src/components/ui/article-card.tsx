@@ -2,7 +2,7 @@
  * Article Card Component
  * 
  * A reusable card component for displaying article information with:
- * - Title and description
+ * - Title and description with multilingual support
  * - Optional cover image
  * - Tags with localization support
  * - Author and date information
@@ -14,13 +14,19 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { NavIcon } from '@/components/NavIcon';
+import { NavIcon } from '@/lib/icons';
 import { MarkdownDialog } from './markdown-dialog';
 import { useLocale } from '@/lib/locale';
 
 export interface ArticleCardProps {
-  title: string;
-  description: string;
+  title?: string;
+  'title-zh'?: string;
+  'title-en'?: string;
+  'title-ja'?: string;
+  description?: string;
+  'description-zh'?: string;
+  'description-en'?: string;
+  'description-ja'?: string;
   imageSrc?: string;
   markdownPath: string;
   tags?: {
@@ -35,7 +41,13 @@ export interface ArticleCardProps {
 
 export function ArticleCard({
   title,
+  'title-zh': titleZh,
+  'title-en': titleEn,
+  'title-ja': titleJa,
   description,
+  'description-zh': descriptionZh,
+  'description-en': descriptionEn,
+  'description-ja': descriptionJa,
   imageSrc,
   markdownPath,
   tags,
@@ -47,6 +59,25 @@ export function ArticleCard({
 }: ArticleCardProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { currentLocale } = useLocale();
+  
+  // 根据当前语言获取本地化的标题和描述
+  const getLocalizedTitle = () => {
+    if (currentLocale === 'zh' && titleZh) return titleZh;
+    if (currentLocale === 'en' && titleEn) return titleEn;
+    if (currentLocale === 'ja' && titleJa) return titleJa;
+    
+    // 回退逻辑
+    return titleZh || titleEn || titleJa || title || '';
+  };
+  
+  const getLocalizedDescription = () => {
+    if (currentLocale === 'zh' && descriptionZh) return descriptionZh;
+    if (currentLocale === 'en' && descriptionEn) return descriptionEn;
+    if (currentLocale === 'ja' && descriptionJa) return descriptionJa;
+    
+    // 回退逻辑
+    return descriptionZh || descriptionEn || descriptionJa || description || '';
+  };
   
   const localizedTag = tags?.[`tag-${currentLocale}`] || tags?.['tag-en'] || '';
   
@@ -60,6 +91,9 @@ export function ArticleCard({
     return date.toLocaleDateString(currentLocale === 'zh' ? 'zh-CN' : currentLocale);
   };
 
+  const localizedTitle = getLocalizedTitle();
+  const localizedDescription = getLocalizedDescription();
+
   return (
     <>
       <Card 
@@ -71,7 +105,7 @@ export function ArticleCard({
             <div className="w-full h-48 overflow-hidden">
               <img 
                 src={imageSrc} 
-                alt={title} 
+                alt={localizedTitle} 
                 className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
               />
             </div>
@@ -91,25 +125,31 @@ export function ArticleCard({
               </span>
             )}
           </div>
-          <h3 className="text-lg font-semibold mb-2">{title}</h3>
-          <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
+          <h3 className="text-lg font-semibold mb-2">{localizedTitle}</h3>
+          <p className="text-sm text-gray-600 line-clamp-2">{localizedDescription}</p>
         </CardContent>
         <CardFooter className="px-4 py-3 border-t border-gray-100 flex justify-between items-center">
           {author && (
-            <span className="text-xs text-gray-500">
-              {author}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <NavIcon id="user" className="w-3.5 h-3.5 text-gray-400" />
+              <span className="text-xs text-gray-500 font-medium">
+                {author}
+              </span>
+            </div>
           )}
           {createdAt && (
-            <time className="text-xs text-gray-500">
-              {formatDate(createdAt)}
-            </time>
+            <div className="flex items-center gap-1.5">
+              <NavIcon id="calendar" className="w-3.5 h-3.5 text-gray-400" />
+              <time className="text-xs text-gray-500">
+                {formatDate(createdAt)}
+              </time>
+            </div>
           )}
         </CardFooter>
       </Card>
 
       <MarkdownDialog
-        title={title}
+        title={localizedTitle}
         markdownPath={markdownPath}
         open={dialogOpen}
         onOpenChange={setDialogOpen}

@@ -1,6 +1,10 @@
 ---
-title: ComfyUI入门指南
-description: ComfyUI基础操作和工作流创建教程
+title-zh: "ComfyUI入门指南"
+title-en: "ComfyUI Getting Started"
+title-ja: "ComfyUI 入門ガイド"
+description-zh: "ComfyUI基础操作和工作流创建教程"
+description-en: "Basic operations and workflow creation tutorial for ComfyUI"
+description-ja: "ComfyUIの基本操作とワークフロー作成チュートリアル"
 created_at: 2023-11-05
 cover_image: "https://images.unsplash.com/photo-1659092836065-82d2d850987c?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 tag-zh: "初学者"
