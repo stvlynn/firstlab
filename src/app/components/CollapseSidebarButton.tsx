@@ -6,10 +6,12 @@ import { getNavCollapsedState, setNavCollapsedState } from '@/lib/navigation-sta
 
 export function CollapseSidebarButton() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   
   // 监听导航栏状态变化
   useEffect(() => {
     // 初始化状态
+    setIsMounted(true);
     setIsCollapsed(getNavCollapsedState());
     
     // 监听状态变化
@@ -30,6 +32,9 @@ export function CollapseSidebarButton() {
     setNavCollapsedState(newState);
   };
   
+  // 如果还没有挂载（服务器端渲染），不显示按钮
+  if (!isMounted) return null;
+  
   return (
     <button
       onClick={toggleCollapse}
@@ -38,11 +43,13 @@ export function CollapseSidebarButton() {
       }`}
       aria-label={isCollapsed ? "展开导航栏" : "折叠导航栏"}
     >
-      <NavIcon 
-        id={isCollapsed ? "nav-arrow-right" : "nav-arrow-left"} 
-        size="1em"
-        className="text-art-ink"
-      />
+      <span suppressHydrationWarning>
+        <NavIcon 
+          id={isCollapsed ? "nav-arrow-right" : "nav-arrow-left"} 
+          size="1em"
+          className="text-art-ink"
+        />
+      </span>
     </button>
   );
 } 

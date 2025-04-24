@@ -30,12 +30,6 @@ navigation:
         ja: "Dify"
         en: "Dify"
       path: "/dify"
-    - id: image-generation
-      name:
-        zh: "图像生成"
-        ja: "画像生成"
-        en: "Image Generation"
-      path: "/image-generation"
     - id: mcp
       name:
         zh: "MCP"

@@ -1,3 +1,16 @@
+/**
+ * Card Component
+ * 
+ * A collection of card-related components for building structured content containers:
+ * - Card: Main container with styling for card-based layouts
+ * - CardHeader: Container for card title and description
+ * - CardTitle: Styled heading for card content
+ * - CardDescription: Secondary text component for additional information
+ * - CardAction: Component for action elements positioned within the card
+ * - CardContent: Main content area of the card
+ * - CardFooter: Container for actions or information at the bottom of the card
+ */
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

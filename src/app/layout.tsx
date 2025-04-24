@@ -33,7 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-watercolor-paper`}>
+      <body 
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-watercolor-paper`}
+      >
         {/* 分析跟踪 */}
         <AnalyticsWrapper />
         

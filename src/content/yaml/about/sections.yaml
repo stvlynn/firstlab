@@ -1,0 +1,57 @@
+---
+# 关于页面UI文本
+ui:
+  title:
+    zh: "关于我们"
+    ja: "私たちについて"
+    en: "About Us"
+  subtitle:
+    zh: "了解First Lab的使命、价值观和团队"
+    ja: "First Labのミッション、価値観、チームについて"
+    en: "Learn about First Lab's mission, values, and team"
+  loading:
+    zh: "正在加载内容..."
+    ja: "コンテンツを読み込んでいます..."
+    en: "Loading content..."
+
+# 页面各部分内容配置
+sections:
+  # 使命介绍部分
+  - id: "mission"
+    title:
+      zh: "我们的使命"
+      ja: "私たちのミッション"
+      en: "Our Mission"
+    markdown: "about/mission.md"
+    icon: "InfoCircle"
+    priority: 1
+  
+  # 团队介绍部分
+  - id: "team"
+    title:
+      zh: "团队介绍"
+      ja: "チーム紹介"
+      en: "Our Team"
+    markdown: "about/team.md"
+    icon: "Users"
+    priority: 2
+    
+  # 技术栈介绍
+  - id: "technology"
+    title:
+      zh: "技术栈"
+      ja: "テクノロジースタック"
+      en: "Technology Stack"
+    markdown: "about/technology.md"
+    icon: "Code"
+    priority: 3
+    
+  # 合作伙伴
+  - id: "partners"
+    title:
+      zh: "合作伙伴"
+      ja: "パートナー"
+      en: "Our Partners"
+    markdown: "about/partners.md"
+    icon: "Handshake"
+    priority: 4 

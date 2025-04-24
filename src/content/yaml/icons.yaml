@@ -4,6 +4,7 @@ navigation_icons:
   home: "Home"
   dify: "CurveArray"
   mcp: "Hammer"
+  image-generation: "Image"
   events: "BellNotification"
   about: "InfoCircle"
   discord: "Discord"
@@ -15,6 +16,7 @@ navigation_icons:
   nav-arrow-left: "NavArrowLeft"
   nav-arrow-right: "NavArrowRight"
   copy: "Copy"
+  edit: "Edit"
 
 # 图标样式配置
 icon_styles:
