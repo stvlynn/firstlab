@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Event } from '@/lib/types';
 import { getLocaleText } from '@/lib/yaml';
 import { motion } from 'framer-motion';
-import MarkdownDialog from '@/components/ui/markdown-dialog';
+import { MarkdownDialog } from '@/components/ui/markdown-dialog';
 import { DEFAULT_LOCALE } from './LanguageSwitcher';
 import Image from 'next/image';
 import { 
@@ -12,6 +12,9 @@ import {
   CardContent, 
   CardHeader
 } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Calendar } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type EventCardProps = {
   event: Event;

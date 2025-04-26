@@ -9,7 +9,7 @@ import {
   CardFooter 
 } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import MarkdownDialog from '@/components/ui/markdown-dialog';
+import { MarkdownDialog } from '@/components/ui/markdown-dialog';
 import { McpItem, McpCategory } from './McpClientWrapper';
 import { DEFAULT_LOCALE } from '@/app/components/LanguageSwitcher';
 
