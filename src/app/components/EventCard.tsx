@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Event } from '@/lib/types';
 import { getLocaleText } from '@/lib/yaml';
 import { motion } from 'framer-motion';
-import MarkdownDialog from '@/components/ui/markdown-dialog';
+import { MarkdownDialog } from '@/components/ui/markdown-dialog';
 import { DEFAULT_LOCALE } from './LanguageSwitcher';
 import Image from 'next/image';
 import { 
