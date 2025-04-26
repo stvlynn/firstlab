@@ -24,7 +24,7 @@ const DEBUG_MODE_ENABLED = false;
 interface MarkdownDialogProps {
   title?: string;
   markdownPath: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -649,4 +649,4 @@ const MarkdownDialog: React.FC<MarkdownDialogProps> = ({
   );
 };
 
-export default MarkdownDialog; 
+export { MarkdownDialog }; 

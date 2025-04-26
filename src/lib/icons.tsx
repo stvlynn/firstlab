@@ -147,6 +147,7 @@ export const Icon: React.FC<{
     height: size || styleConfig.height,
     strokeWidth: styleConfig.strokeWidth,
     className,
+    suppressHydrationWarning: true,
   };
   
   // 从Iconoir获取图标组件
@@ -158,7 +159,11 @@ export const Icon: React.FC<{
     return <IconoirIcons.QuestionMark {...finalProps} />;
   }
   
-  return <IconComponent {...finalProps} />;
+  return (
+    <span suppressHydrationWarning>
+      <IconComponent {...finalProps} />
+    </span>
+  );
 };
 
 // 导航图标组件

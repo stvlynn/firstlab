@@ -1,0 +1,8 @@
+在实际部署时，请在此目录放置以下图片：
+
+1. comfyui-basics.jpg - ComfyUI入门指南的封面图片
+2. comfyui-deploy.jpg - ComfyUI部署指南的封面图片
+3. comfyui-advanced.jpg - ComfyUI高级技术指南的封面图片
+4. sd-prompt-cover.jpg - Stable Diffusion提示词优化指南的封面图片
+
+建议图片尺寸：800x400像素，保持16:9的宽高比以获得最佳显示效果。
