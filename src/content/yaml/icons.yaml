@@ -1,10 +1,18 @@
 ---
+# Icons Configuration
+# Source: Iconoir - https://iconoir.com/
+# 
+# Naming Convention:
+# - All icon components from Iconoir must use PascalCase naming
+# - Example: "media-image" in reference should be "MediaImage" in this config
+# - See full list of available icons at: https://iconoir.com/
+#
 # 导航图标配置
 navigation_icons:
   home: "Home"
   dify: "CurveArray"
   mcp: "Hammer"
-  image-generation: "Image"
+  image-generation: "MediaImage"
   events: "BellNotification"
   about: "InfoCircle"
   discord: "Discord"

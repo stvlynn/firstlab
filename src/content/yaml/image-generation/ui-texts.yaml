@@ -1,0 +1,43 @@
+title:
+  zh: "图像生成教程"
+  ja: "画像生成チュートリアル"
+  en: "Image Generation Tutorials"
+
+subtitle:
+  zh: "探索AI图像生成的技术和工具"
+  ja: "AI画像生成の技術とツールを探索する"
+  en: "Explore techniques and tools for AI image generation"
+
+level:
+  beginner:
+    zh: "初学者"
+    ja: "初心者"
+    en: "Beginner"
+  intermediate:
+    zh: "中级"
+    ja: "中級"
+    en: "Intermediate"
+  advanced:
+    zh: "高级"
+    ja: "上級"
+    en: "Advanced"
+
+view:
+  zh: "查看教程"
+  ja: "チュートリアルを見る"
+  en: "View Tutorial"
+
+close:
+  zh: "关闭"
+  ja: "閉じる"
+  en: "Close"
+
+bestPracticesTitle:
+  zh: "最佳实践"
+  ja: "ベストプラクティス"
+  en: "Best Practices"
+
+bestPracticesSubtitle:
+  zh: "专家撰写的AI图像生成技巧和经验"
+  ja: "専門家によるAI画像生成のヒントとテクニック"
+  en: "Expert tips and techniques for AI image generation" 

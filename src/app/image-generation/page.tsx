@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { NavIcon } from '@/lib/icons';
 import Image from 'next/image';
 import matter from 'gray-matter';
+import { loadImageGenUITexts, getLocaleText } from '@/lib/yaml';
 
 // 定义教程类型
 interface Tutorial {
@@ -35,77 +36,140 @@ interface TutorialMetadata {
   author?: string;
 }
 
-// 定义图片生成教程数据
-const IMAGE_GENERATION_TUTORIALS: Tutorial[] = [
-  {
-    id: 'comfyui-getting-started',
-    title: {
-      zh: "ComfyUI入门指南",
-      ja: "ComfyUI入門ガイド",
-      en: "ComfyUI Getting Started"
-    },
-    description: {
-      zh: "ComfyUI基础操作和工作流创建教程",
-      ja: "ComfyUIの基本操作とワークフロー作成チュートリアル",
-      en: "Basic operations and workflow creation tutorial for ComfyUI"
-    },
-    markdownPath: "content/markdown/image-generation/comfyui/getting-started.md",
-    icon: "image",
-    level: 'beginner'
-  },
-  {
-    id: 'comfyui-deployment',
-    title: {
-      zh: "ComfyUI部署指南",
-      ja: "ComfyUIデプロイメントガイド",
-      en: "ComfyUI Deployment Guide"
-    },
-    description: {
-      zh: "如何部署和配置ComfyUI进行AI图像生成",
-      ja: "AIイメージ生成のためのComfyUIの導入と設定方法",
-      en: "How to deploy and configure ComfyUI for AI image generation"
-    },
-    markdownPath: "content/markdown/image-generation/comfyui/deployment.md",
-    icon: "settings",
-    level: 'intermediate'
-  },
-  {
-    id: 'comfyui-advanced',
-    title: {
-      zh: "ComfyUI高级技术指南",
-      ja: "ComfyUI高度な技術ガイド",
-      en: "ComfyUI Advanced Techniques"
-    },
-    description: {
-      zh: "掌握ComfyUI的高级功能和工作流优化方法",
-      ja: "ComfyUIの高度な機能とワークフロー最適化の方法",
-      en: "Master advanced features and workflow optimization methods in ComfyUI"
-    },
-    markdownPath: "content/markdown/image-generation/comfyui/advanced-techniques.md",
-    icon: "curveArray",
-    level: 'advanced'
+// 动态获取教程数据
+const fetchTutorials = async (): Promise<Tutorial[]> => {
+  try {
+    // 发起API请求，获取comfyui目录下的所有文件
+    const response = await fetch('/api/markdown/list?path=content/markdown/image-generation/comfyui');
+    if (!response.ok) {
+      console.error('Failed to fetch tutorials list');
+      return [];
+    }
+    
+    const fileList = await response.json();
+    
+    // 从文件列表构建教程数组
+    const tutorialsList: Tutorial[] = await Promise.all(
+      fileList.map(async (filename: string) => {
+        // 排除index.md和workflows文件夹
+        if (filename === 'index.md' || !filename.endsWith('.md')) {
+          return null;
+        }
+        
+        const filePath = `content/markdown/image-generation/comfyui/${filename}`;
+        
+        // 获取文件内容
+        const fileResponse = await fetch(`/api/markdown?path=${encodeURIComponent(filePath)}`);
+        if (!fileResponse.ok) {
+          console.error(`Failed to fetch file: ${filePath}`);
+          return null;
+        }
+        
+        const content = await fileResponse.text();
+        const { data } = matter(content);
+        
+        // 从文件名生成ID
+        const id = filename.replace('.md', '');
+        
+        return {
+          id,
+          title: {
+            zh: data['title-zh'] || data.title || id,
+            en: data['title-en'] || data.title || id,
+            ja: data['title-ja'] || data.title || id
+          },
+          description: {
+            zh: data['description-zh'] || data.description || '',
+            en: data['description-en'] || data.description || '',
+            ja: data['description-ja'] || data.description || ''
+          },
+          markdownPath: filePath,
+          icon: data.icon || "image",
+          level: data.level || 'beginner',
+          coverImage: data.cover_image,
+          tag: {
+            zh: data['tag-zh'] || '',
+            en: data['tag-en'] || '',
+            ja: data['tag-ja'] || ''
+          },
+          tagColor: data.tag_color,
+          author: data.author
+        };
+      })
+    );
+    
+    // 过滤掉null值并返回
+    return tutorialsList.filter(Boolean) as Tutorial[];
+  } catch (error) {
+    console.error('Error fetching tutorials:', error);
+    return [];
   }
-];
+};
 
-// 在已有的IMAGE_GENERATION_TUTORIALS数组后添加最佳实践数据
-const BEST_PRACTICES: Tutorial[] = [
-  {
-    id: 'sd-prompt-optimization',
-    title: {
-      zh: "Stable Diffusion提示词优化指南",
-      ja: "Stable Diffusionプロンプト最適化ガイド",
-      en: "Stable Diffusion Prompt Optimization Guide"
-    },
-    description: {
-      zh: "如何编写高质量的提示词以获得更好的AI图像生成结果",
-      ja: "より良いAI画像生成結果を得るための高品質なプロンプトの書き方",
-      en: "How to write high-quality prompts for better AI image generation results"
-    },
-    markdownPath: "content/markdown/image-generation/best-practices/stable-diffusion-prompt.md",
-    icon: "edit",
-    level: 'intermediate'
+// 动态获取最佳实践教程数据
+const fetchBestPractices = async (): Promise<Tutorial[]> => {
+  try {
+    // 发起API请求，获取best-practices目录下的所有文件
+    const response = await fetch('/api/markdown/list?path=content/markdown/image-generation/best-practices');
+    if (!response.ok) {
+      console.error('Failed to fetch best practices list');
+      return [];
+    }
+    
+    const fileList = await response.json();
+    
+    // 从文件列表构建教程数组
+    const bestPracticesList: Tutorial[] = await Promise.all(
+      fileList.map(async (filename: string) => {
+        const filePath = `content/markdown/image-generation/best-practices/${filename}`;
+        
+        // 获取文件内容
+        const fileResponse = await fetch(`/api/markdown?path=${encodeURIComponent(filePath)}`);
+        if (!fileResponse.ok) {
+          console.error(`Failed to fetch file: ${filePath}`);
+          return null;
+        }
+        
+        const content = await fileResponse.text();
+        const { data } = matter(content);
+        
+        // 从文件名生成ID
+        const id = filename.replace('.md', '');
+        
+        return {
+          id,
+          title: {
+            zh: data['title-zh'] || data.title || id,
+            en: data['title-en'] || data.title || id,
+            ja: data['title-ja'] || data.title || id
+          },
+          description: {
+            zh: data['description-zh'] || data.description || '',
+            en: data['description-en'] || data.description || '',
+            ja: data['description-ja'] || data.description || ''
+          },
+          markdownPath: filePath,
+          icon: data.icon || "edit",
+          level: data.level || 'intermediate',
+          coverImage: data.cover_image,
+          tag: {
+            zh: data['tag-zh'] || '',
+            en: data['tag-en'] || '',
+            ja: data['tag-ja'] || ''
+          },
+          tagColor: data.tag_color,
+          author: data.author
+        };
+      })
+    );
+    
+    // 过滤掉null值并返回
+    return bestPracticesList.filter(Boolean) as Tutorial[];
+  } catch (error) {
+    console.error('Error fetching best practices:', error);
+    return [];
   }
-];
+};
 
 // 动画变体
 const containerVariants = {
@@ -122,62 +186,6 @@ const containerVariants = {
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 }
-};
-
-// UI文本
-const UI_TEXTS = {
-  title: {
-    zh: "图像生成教程",
-    ja: "画像生成チュートリアル",
-    en: "Image Generation Tutorials"
-  },
-  subtitle: {
-    zh: "探索AI图像生成的技术和工具",
-    ja: "AI画像生成の技術とツールを探索する",
-    en: "Explore techniques and tools for AI image generation"
-  },
-  level: {
-    beginner: {
-      zh: "初学者",
-      ja: "初心者",
-      en: "Beginner"
-    },
-    intermediate: {
-      zh: "中级",
-      ja: "中級",
-      en: "Intermediate"
-    },
-    advanced: {
-      zh: "高级",
-      ja: "上級",
-      en: "Advanced"
-    }
-  },
-  view: {
-    zh: "查看教程",
-    ja: "チュートリアルを見る",
-    en: "View Tutorial"
-  },
-  close: {
-    zh: "关闭",
-    ja: "閉じる",
-    en: "Close"
-  },
-  bestPracticesTitle: {
-    zh: "最佳实践",
-    ja: "ベストプラクティス",
-    en: "Best Practices"
-  },
-  bestPracticesSubtitle: {
-    zh: "专家撰写的AI图像生成技巧和经验",
-    ja: "専門家によるAI画像生成のヒントとテクニック",
-    en: "Expert tips and techniques for AI image generation"
-  }
-};
-
-// 获取本地化文本
-const getLocaleText = (textObj: Record<string, string>, locale: string): string => {
-  return textObj[locale] || textObj['en'] || '';
 };
 
 // 获取等级的颜色
@@ -199,66 +207,52 @@ export default function ImageGenerationPage() {
   const [selectedTutorial, setSelectedTutorial] = useState<Tutorial | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [tutorials, setTutorials] = useState<Tutorial[]>(IMAGE_GENERATION_TUTORIALS);
-  const [bestPractices, setBestPractices] = useState<Tutorial[]>(BEST_PRACTICES);
-  
-  // 获取markdown文件的元数据
-  const fetchTutorialMetadata = async (tutorialList: Tutorial[]) => {
-    const updatedTutorials = await Promise.all(
-      tutorialList.map(async (tutorial) => {
-        try {
-          const response = await fetch(`/api/markdown?path=${encodeURIComponent(tutorial.markdownPath)}`);
-          if (!response.ok) {
-            console.error(`Failed to fetch ${tutorial.markdownPath}: ${response.status}`);
-            return tutorial;
-          }
-          
-          const markdown = await response.text();
-          const { data } = matter(markdown);
-          
-          // 解析元数据
-          const metadata: TutorialMetadata = {
-            coverImage: data.cover_image as string,
-            tagZh: data['tag-zh'] as string,
-            tagEn: data['tag-en'] as string,
-            tagJa: data['tag-ja'] as string,
-            tagColor: data.tag_color as string,
-            author: data.author as string
-          };
-          
-          // 更新教程对象
-          return {
-            ...tutorial,
-            coverImage: metadata.coverImage,
-            tag: {
-              zh: metadata.tagZh || getLocaleText(UI_TEXTS.level[tutorial.level], 'zh'),
-              en: metadata.tagEn || getLocaleText(UI_TEXTS.level[tutorial.level], 'en'),
-              ja: metadata.tagJa || getLocaleText(UI_TEXTS.level[tutorial.level], 'ja')
-            },
-            tagColor: metadata.tagColor || getLevelColorClass(tutorial.level),
-            author: metadata.author
-          };
-        } catch (error) {
-          console.error(`Error fetching metadata for ${tutorial.markdownPath}:`, error);
-          return tutorial;
-        }
-      })
-    );
-    
-    return updatedTutorials;
-  };
+  const [tutorials, setTutorials] = useState<Tutorial[]>([]);
+  const [bestPractices, setBestPractices] = useState<Tutorial[]>([]);
+  const [uiTexts, setUiTexts] = useState<any>({
+    title: { zh: "图像生成教程", ja: "画像生成チュートリアル", en: "Image Generation Tutorials" },
+    subtitle: { zh: "探索AI图像生成的技术和工具", ja: "AI画像生成の技術とツールを探索する", en: "Explore techniques and tools for AI image generation" },
+    level: {
+      beginner: { zh: "初学者", ja: "初心者", en: "Beginner" },
+      intermediate: { zh: "中级", ja: "中級", en: "Intermediate" },
+      advanced: { zh: "高级", ja: "上級", en: "Advanced" }
+    },
+    view: { zh: "查看教程", ja: "チュートリアルを見る", en: "View Tutorial" },
+    close: { zh: "关闭", ja: "閉じる", en: "Close" },
+    bestPracticesTitle: { zh: "最佳实践", ja: "ベストプラクティス", en: "Best Practices" },
+    bestPracticesSubtitle: { zh: "专家撰写的AI图像生成技巧和经验", ja: "専門家によるAI画像生成のヒントとテクニック", en: "Expert tips and techniques for AI image generation" }
+  });
   
   // 从本地存储获取语言设置
   useEffect(() => {
     const fetchData = async () => {
       setIsMounted(true);
-      // 获取教程元数据
-      const updatedTutorials = await fetchTutorialMetadata(IMAGE_GENERATION_TUTORIALS);
-      setTutorials(updatedTutorials);
       
-      // 获取最佳实践元数据
-      const updatedBestPractices = await fetchTutorialMetadata(BEST_PRACTICES);
-      setBestPractices(updatedBestPractices);
+      // 获取UI文本
+      try {
+        const texts = await loadImageGenUITexts();
+        if (texts) {
+          setUiTexts(texts);
+        }
+      } catch (error) {
+        console.error('Error loading UI texts:', error);
+      }
+      
+      // 获取教程数据
+      try {
+        const tutorialsData = await fetchTutorials();
+        setTutorials(tutorialsData);
+      } catch (error) {
+        console.error('Error fetching tutorials:', error);
+      }
+      
+      // 获取最佳实践数据
+      try {
+        const bestPracticesData = await fetchBestPractices();
+        setBestPractices(bestPracticesData);
+      } catch (error) {
+        console.error('Error fetching best practices:', error);
+      }
     };
     
     fetchData();
@@ -290,35 +284,21 @@ export default function ImageGenerationPage() {
     return iconId ? <NavIcon id={iconId} className={className} /> : null;
   };
   
-  // 根据标签级别获取颜色类名
-  const getLevelColorClass = (level: string): string => {
-    switch(level) {
-      case 'beginner':
-        return 'emerald';
-      case 'intermediate':
-        return 'blue';
-      case 'advanced':
-        return 'purple';
-      default:
-        return 'gray';
-    }
-  };
-  
   // 获取标签的颜色类
   const getTagColorClass = (tutorial: Tutorial): string => {
-    const color = tutorial.tagColor || getLevelColorClass(tutorial.level);
+    const color = tutorial.tagColor || getLevelColor(tutorial.level);
     return `bg-${color}-100 text-${color}-800`;
   };
   
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-2 text-art-ink relative inline-block">
-        {getLocaleText(UI_TEXTS.title, currentLocale)}
+        {getLocaleText(uiTexts.title, currentLocale)}
         <span className="absolute bottom-0 left-0 w-full h-1 bg-art-watercolor-blue opacity-70"></span>
       </h1>
       
       <p className="mb-8 text-art-charcoal">
-        {getLocaleText(UI_TEXTS.subtitle, currentLocale)}
+        {getLocaleText(uiTexts.subtitle, currentLocale)}
       </p>
       
       <motion.div
@@ -342,7 +322,7 @@ export default function ImageGenerationPage() {
                     <CardTitle>{getLocaleText(tutorial.title, currentLocale)}</CardTitle>
                   </div>
                   <div className={`px-2 py-1 rounded-full text-xs font-medium ${tutorial.tag ? getTagColorClass(tutorial) : getLevelColor(tutorial.level)}`}>
-                    {tutorial.tag ? getLocaleText(tutorial.tag, currentLocale) : getLocaleText(UI_TEXTS.level[tutorial.level], currentLocale)}
+                    {tutorial.tag ? getLocaleText(tutorial.tag, currentLocale) : getLocaleText(uiTexts.level[tutorial.level], currentLocale)}
                   </div>
                 </div>
                 <CardDescription>
@@ -366,7 +346,7 @@ export default function ImageGenerationPage() {
               </CardContent>
               <CardFooter className="justify-between">
                 <div className="text-sm text-primary hover:underline flex items-center">
-                  {getLocaleText(UI_TEXTS.view, currentLocale)}
+                  {getLocaleText(uiTexts.view, currentLocale)}
                   {isMounted && <NavIcon id="nav-arrow-right" className="ml-1 h-4 w-4" />}
                 </div>
                 {tutorial.author && (
@@ -386,12 +366,12 @@ export default function ImageGenerationPage() {
       {/* 添加最佳实践区块 */}
       <div className="mt-16 mb-8">
         <h2 className="text-2xl font-bold mb-2 text-art-ink relative inline-block">
-          {getLocaleText(UI_TEXTS.bestPracticesTitle, currentLocale)}
+          {getLocaleText(uiTexts.bestPracticesTitle, currentLocale)}
           <span className="absolute bottom-0 left-0 w-full h-1 bg-art-watercolor-green opacity-70"></span>
         </h2>
         
         <p className="mb-8 text-art-charcoal">
-          {getLocaleText(UI_TEXTS.bestPracticesSubtitle, currentLocale)}
+          {getLocaleText(uiTexts.bestPracticesSubtitle, currentLocale)}
         </p>
         
         <motion.div
@@ -415,7 +395,7 @@ export default function ImageGenerationPage() {
                       <CardTitle>{getLocaleText(practice.title, currentLocale)}</CardTitle>
                     </div>
                     <div className={`px-2 py-1 rounded-full text-xs font-medium ${practice.tag ? getTagColorClass(practice) : getLevelColor(practice.level)}`}>
-                      {practice.tag ? getLocaleText(practice.tag, currentLocale) : getLocaleText(UI_TEXTS.level[practice.level], currentLocale)}
+                      {practice.tag ? getLocaleText(practice.tag, currentLocale) : getLocaleText(uiTexts.level[practice.level], currentLocale)}
                     </div>
                   </div>
                   <CardDescription>
@@ -439,7 +419,7 @@ export default function ImageGenerationPage() {
                 </CardContent>
                 <CardFooter className="justify-between">
                   <div className="text-sm text-primary hover:underline flex items-center">
-                    {getLocaleText(UI_TEXTS.view, currentLocale)}
+                    {getLocaleText(uiTexts.view, currentLocale)}
                     {isMounted && <NavIcon id="nav-arrow-right" className="ml-1 h-4 w-4" />}
                   </div>
                   {practice.author && (

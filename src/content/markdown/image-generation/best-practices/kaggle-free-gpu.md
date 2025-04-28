@@ -1,6 +1,10 @@
 ---
-title: 使用Kaggle的免费GPU玩转流行的AI项目
-description: 介绍如何在Kaggle上，使用免费GPU玩转流行的AI项目
+title-zh: "使用Kaggle的免费GPU玩转流行的AI项目"
+title-en: "Using Kaggle's Free GPU for Popular AI Projects"
+title-ja: "Kaggleの無料GPUを活用して人気のAIプロジェクトを楽しむ"
+description-zh: "介绍如何在Kaggle上，使用免费GPU玩转流行的AI项目"
+description-en: "Learn how to leverage Kaggle's free GPU resources to accelerate popular AI projects"
+description-ja: "Kaggleの無料GPUリソースを活用して、人気のAIプロジェクトを加速させる方法を紹介"
 created_at: 2025-04-26
 cover_image: "https://images.unsplash.com/photo-1638562692477-274868157630?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 tag-zh: "中级"
@@ -301,7 +305,7 @@ First, compress your dataset. Expand the Input section on the right panel, click
 
 ## Examples  
 
-I've run two projects on Kaggle: [fish-audio (text-to-speech)](https://github.com/fishaudio/fish-speech) and [ComfyUI (image generation)](https://github.com/comfyanonymous/ComfyUI). I’ll share the complete Notebooks here.  
+I've run two projects on Kaggle: [fish-audio (text-to-speech)](https://github.com/fishaudio/fish-speech) and [ComfyUI (image generation)](https://github.com/comfyanonymous/ComfyUI). I'll share the complete Notebooks here.  
 
 - fish-speech, with a mini Genshin Impact voice pack included, generates approximately 2 seconds of speech per 1 second of computation: [https://www.kaggle.com/code/lindohe/fish-speech-public](https://www.kaggle.com/code/lindohe/fish-speech-public)  
 

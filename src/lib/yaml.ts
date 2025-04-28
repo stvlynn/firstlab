@@ -28,6 +28,7 @@ const fetchConfigData = async (configName: string) => {
 let siteConfigCache: SiteConfig | null = null;
 let difyConfigCache: Categories | null = null;
 let mcpConfigCache: Categories | null = null;
+let imageGenUITextsCache: any = null;
 
 /**
  * 加载站点配置
@@ -66,6 +67,17 @@ export async function loadMcpCategories(): Promise<Categories> {
   
   const data = await fetchConfigData('mcp');
   mcpConfigCache = data;
+  return data;
+}
+
+/**
+ * 加载图像生成页面UI文本
+ */
+export async function loadImageGenUITexts(): Promise<any> {
+  if (imageGenUITextsCache) return imageGenUITextsCache;
+  
+  const data = await fetchConfigData('image-generation-ui');
+  imageGenUITextsCache = data;
   return data;
 }
 

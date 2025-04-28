@@ -430,7 +430,7 @@ const MarkdownContent = ({ markdownPath, locale, title, repo_id }: { markdownPat
                       className="rounded-md max-w-full mx-auto"
                       style={{ maxHeight: '500px' }}
                     />
-                    {props.alt && <div className="text-center text-sm text-gray-500 mt-2">{props.alt}</div>}
+                    {props.alt && <span className="block text-center text-sm text-gray-500 mt-2">{props.alt}</span>}
                   </div>
                 );
               },
